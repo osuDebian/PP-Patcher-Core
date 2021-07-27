@@ -32,6 +32,18 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             : base(mods)
         {
         }
+		
+		public double DifficultyValueAverage() {
+            List<double> strains = GetCurrentStrainPeaks().OrderByDescending(d => d).ToList();
+			
+			double sum = 0;
+			
+			foreach (double strain in strains.OrderByDescending(d => d)) {
+				sum += strain;
+			}
+			
+			return sum * DifficultyMultiplier / strains.Count;
+		}
 
         public override double DifficultyValue()
         {
