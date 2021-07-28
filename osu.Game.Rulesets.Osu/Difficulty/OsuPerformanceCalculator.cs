@@ -148,16 +148,16 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             // aimValue *= 1 - max(0.5 - DistanceTop, 0)
             double JumpRate = (Attributes.DistanceAverage / Attributes.DistanceTop);
 
-            double StreamThresholdLength = 0.6;
+            double StreamThresholdLength = 0.7;
             double StreamFirst = Math.Max(StreamThresholdLength - JumpRate, 0);
             double StreamNerfRateLength = Math.Max(1 - Math.Max(StreamFirst, 0) * 2, 0);
 
             //Console.WriteLine(StreamNerfRateLength);
 
-            double lengthBonus = 0.95 + 0.2 * Math.Min(1.0, totalHits / 2000.0) * StreamNerfRateLength;
+            double lengthBonus = 0.95 + 0.4 * Math.Min(1.0, totalHits / 2000.0) * StreamNerfRateLength;
 
 
-            aimValue *= lengthBonus;
+            //aimValue *= lengthBonus;
 
             // Penalize misses by assessing # of misses relative to the total # of objects. Default a 3% reduction for any # of misses.
             if (countMiss > 0)
@@ -193,8 +193,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty
 
             // stream nerf
             // aimValue *= 1 - max(0.5 - DistanceTop, 0)
-            double StreamThreshold = 0.5;
-            double StreamNerfRate = 1 - Math.Max(StreamThreshold - JumpRate, 0) * 0.8;
+            double StreamThreshold = 0.7;
+            double StreamNerfRate = 1 - Math.Max(StreamThreshold - JumpRate, 0) * 0.5;
             aimValue *= StreamNerfRate;
 
 

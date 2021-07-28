@@ -59,8 +59,8 @@ namespace osu.Desktop
             Mod[] modsDT = new Mod[]
             {
                 new OsuModRelax(),
-                //new OsuModDoubleTime(),
-                //new OsuModHardRock(),
+                new OsuModDoubleTime(),
+                new OsuModHardRock(),
                 new OsuModHidden(),
             };
 
