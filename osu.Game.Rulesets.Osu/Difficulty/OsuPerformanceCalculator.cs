@@ -42,7 +42,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             countMiss = Score.Statistics.GetValueOrDefault(HitResult.Miss);
 
             // Custom multipliers for NoFail and SpunOut.
-            double multiplier = 1.12; // This is being adjusted to keep the final pp value scaled around what it used to be when changing things
+            double multiplier = 1.2; // This is being adjusted to keep the final pp value scaled around what it used to be when changing things
 
             if (mods.Any(m => m is OsuModNoFail))
                 multiplier *= Math.Max(0.90, 1.0 - 0.02 * countMiss);
@@ -53,8 +53,11 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             double strainAverage = Attributes.AimStrainAverage;
             double strainMost = Attributes.AimStrainMost;
             double distanceAverage = Attributes.DistanceAverage;
+            double distanceTop = Attributes.DistanceTop;
             //Console.WriteLine(strainAverage + ", " + rawAim + "(" + (strainAverage / rawAim) + ")");
             //Console.WriteLine(strainAverage + ", " + strainMost + ", " + distanceAverage);
+            //Console.WriteLine(distanceAverage + ", " + distanceTop + ", " + (distanceAverage / distanceTop));
+
 
             double aimValue = computeAimValueRelax();
             //double speedValue = computeSpeedValue();
@@ -64,7 +67,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
                     Math.Pow(aimValue, 1.1) +
                     0 +
                     Math.Pow(accuracyValue, 1.1), 1.0 / 1.1
-                ) * multiplier * 0.7 + distanceAverage * 0.6;
+                ) * multiplier;
 
             if (categoryRatings != null)
             {
@@ -79,51 +82,56 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             return totalValue;
         }
 
-        public override double Calculate(Dictionary<string, double> categoryRatings = null)
-        {
-            return CalculateRelax(categoryRatings);
-        }
         //public override double Calculate(Dictionary<string, double> categoryRatings = null)
         //{
-        //    mods = Score.Mods;
-        //    accuracy = Score.Accuracy;
-        //    scoreMaxCombo = Score.MaxCombo;
-        //    countGreat = Score.Statistics.GetValueOrDefault(HitResult.Great);
-        //    countOk = Score.Statistics.GetValueOrDefault(HitResult.Ok);
-        //    countMeh = Score.Statistics.GetValueOrDefault(HitResult.Meh);
-        //    countMiss = Score.Statistics.GetValueOrDefault(HitResult.Miss);
-
-        //    // Custom multipliers for NoFail and SpunOut.
-        //    double multiplier = 1.12; // This is being adjusted to keep the final pp value scaled around what it used to be when changing things
-
-        //    if (mods.Any(m => m is OsuModNoFail))
-        //        multiplier *= Math.Max(0.90, 1.0 - 0.02 * countMiss);
-
-        //    if (mods.Any(m => m is OsuModSpunOut))
-        //        multiplier *= 1.0 - Math.Pow((double)Attributes.SpinnerCount / totalHits, 0.85);
-
-        //    double aimValue = computeAimValue();
-        //    double speedValue = computeSpeedValue();
-        //    double accuracyValue = computeAccuracyValue();
-        //    double totalValue =
-        //        Math.Pow(
-        //            Math.Pow(aimValue, 1.1) +
-        //            Math.Pow(speedValue, 1.1) +
-        //            Math.Pow(accuracyValue, 1.1), 1.0 / 1.1
-        //        ) * multiplier;
-
-        //    if (categoryRatings != null)
-        //    {
-        //        categoryRatings.Add("Aim", aimValue);
-        //        categoryRatings.Add("Speed", 0);
-        //        categoryRatings.Add("Accuracy", accuracyValue);
-        //        categoryRatings.Add("OD", Attributes.OverallDifficulty);
-        //        categoryRatings.Add("AR", Attributes.ApproachRate);
-        //        categoryRatings.Add("Max Combo", Attributes.MaxCombo);
-        //    }
-
-        //    return totalValue;
+        //    return CalculateRelax(categoryRatings);
         //}
+        public override double Calculate(Dictionary<string, double> categoryRatings = null)
+        {
+            mods = Score.Mods;
+            accuracy = Score.Accuracy;
+            scoreMaxCombo = Score.MaxCombo;
+            countGreat = Score.Statistics.GetValueOrDefault(HitResult.Great);
+            countOk = Score.Statistics.GetValueOrDefault(HitResult.Ok);
+            countMeh = Score.Statistics.GetValueOrDefault(HitResult.Meh);
+            countMiss = Score.Statistics.GetValueOrDefault(HitResult.Miss);
+
+            if(mods.Any(it=>it is OsuModRelax))
+            {
+                return CalculateRelax(categoryRatings);
+            }
+
+            // Custom multipliers for NoFail and SpunOut.
+            double multiplier = 1.12; // This is being adjusted to keep the final pp value scaled around what it used to be when changing things
+
+            if (mods.Any(m => m is OsuModNoFail))
+                multiplier *= Math.Max(0.90, 1.0 - 0.02 * countMiss);
+
+            if (mods.Any(m => m is OsuModSpunOut))
+                multiplier *= 1.0 - Math.Pow((double)Attributes.SpinnerCount / totalHits, 0.85);
+
+            double aimValue = computeAimValue();
+            double speedValue = computeSpeedValue();
+            double accuracyValue = computeAccuracyValue();
+            double totalValue =
+                Math.Pow(
+                    Math.Pow(aimValue, 1.1) +
+                    Math.Pow(speedValue, 1.1) +
+                    Math.Pow(accuracyValue, 1.1), 1.0 / 1.1
+                ) * multiplier;
+
+            if (categoryRatings != null)
+            {
+                categoryRatings.Add("Aim", aimValue);
+                categoryRatings.Add("Speed", speedValue);
+                categoryRatings.Add("Accuracy", accuracyValue);
+                categoryRatings.Add("OD", Attributes.OverallDifficulty);
+                categoryRatings.Add("AR", Attributes.ApproachRate);
+                categoryRatings.Add("Max Combo", Attributes.MaxCombo);
+            }
+
+            return totalValue;
+        }
 
         private double computeAimValueRelax()
         {
@@ -135,8 +143,18 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             double aimValue = Math.Pow(5.0 * Math.Max(1.0, rawAim / 0.0675) - 4.0, 3.0) / 100000.0;
 
             // Longer maps are worth more
-            double lengthBonus = 0.95 + 0.4 * Math.Min(1.0, totalHits / 4000.0) +
-                                 (totalHits > 4000 ? Math.Log10(totalHits / 4000.0) * 0.5 : 0.0);
+            // 릴렉스 연타 버프의 큰 원인은 갯수 버프가 크다 잡아야한다
+            // stream nerf
+            // aimValue *= 1 - max(0.5 - DistanceTop, 0)
+            double JumpRate = (Attributes.DistanceAverage / Attributes.DistanceTop);
+
+            double StreamThresholdLength = 0.6;
+            double StreamFirst = Math.Max(StreamThresholdLength - JumpRate, 0);
+            double StreamNerfRateLength = Math.Max(1 - Math.Max(StreamFirst, 0) * 2, 0);
+
+            //Console.WriteLine(StreamNerfRateLength);
+
+            double lengthBonus = 0.95 + 0.2 * Math.Min(1.0, totalHits / 2000.0) * StreamNerfRateLength;
 
 
             aimValue *= lengthBonus;
@@ -160,8 +178,25 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             double approachRateBonus = 1.0 + (0.03 + 0.37 * approachRateTotalHitsFactor) * approachRateFactor;
 
             // We want to give more reward for lower AR when it comes to aim and HD. This nerfs high AR and buffs lower AR.
-            if (mods.Any(h => h is OsuModHidden))
-                aimValue *= 1.0 + 0.04 * (12.0 - Attributes.ApproachRate);
+
+            // low AR buff
+            // aimValue *= log(10 + (12 - AR)^(1.52163)) / 2
+            // hidden multiplier 1.5
+            double arBonus = Math.Log10(10 + Math.Pow((12.0 - Attributes.ApproachRate), 1.52163) * (mods.Any(h => h is OsuModHidden) ? 1.5 : 1));
+            //Console.WriteLine(arBonus);
+            aimValue *= arBonus;
+
+            // aim buff
+            // aimValue *= max(DistanceTop - 0.6, 0)
+            //aimValue *= Math.Max((Attributes.DistanceTop - 0.5) * 2, 1);
+            //aimValue *= 1 + Math.Max(JumpRate - 0.5, 0) / 2;
+
+            // stream nerf
+            // aimValue *= 1 - max(0.5 - DistanceTop, 0)
+            double StreamThreshold = 0.5;
+            double StreamNerfRate = 1 - Math.Max(StreamThreshold - JumpRate, 0) * 0.8;
+            aimValue *= StreamNerfRate;
+
 
             double flashlightBonus = 1.0;
 
@@ -301,8 +336,11 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             double accuracyValue = Math.Pow(1.52163, Attributes.OverallDifficulty) * Math.Pow(betterAccuracyPercentage, 24) * 2.83;
 
             // Bonus for many hitcircles - it's harder to keep good accuracy up for longer
-            // acc 버프는 릴렉스에서 필요 없음
-            //accuracyValue *= Math.Min(1.15, Math.Pow(amountHitObjectsWithAccuracy / 2000.0, 0.3));
+            // acc 스트림 너프
+            //double JumpRate = (Attributes.DistanceAverage / Attributes.DistanceTop);
+            //double StreamThresholdLength = 0.5;
+            //double StreamNerfRateLength = 1 - Math.Max(StreamThresholdLength - JumpRate, 0) * 1.5;
+            //accuracyValue *= Math.Min(1.15, Math.Pow(amountHitObjectsWithAccuracy / 1000.0, 0.3)) * StreamNerfRateLength;
 
             if (mods.Any(m => m is OsuModHidden))
                 accuracyValue *= 1.08;

@@ -27,25 +27,25 @@ namespace osu.Game.Rulesets.Osu.Difficulty
         {
         }
 
-        public double GetDistanceAverage(IBeatmap beatmap, Mod[] mods)
-        {
-            double sum = 0;
-            for(int i = 0; i < beatmap.HitObjects.Count - 1; i++)
-            {
-                var obj1 = (OsuHitObject) beatmap.HitObjects[i];
-                var obj2 = (OsuHitObject) beatmap.HitObjects[i + 1];
-                var distance = (obj2.Position - obj1.Position).Length;
+        //public double GetDistanceAverage(IBeatmap beatmap, Mod[] mods)
+        //{
+        //    double sum = 0;
+        //    for(int i = 0; i < beatmap.HitObjects.Count - 1; i++)
+        //    {
+        //        var obj1 = (OsuHitObject) beatmap.HitObjects[i];
+        //        var obj2 = (OsuHitObject) beatmap.HitObjects[i + 1];
+        //        var distance = (obj2.Position - obj1.Position).Length;
 
-                if (mods.Any(it => it is OsuModDoubleTime || it is OsuModNightcore)) distance *= 1.5F;
+        //        if (mods.Any(it => it is OsuModDoubleTime || it is OsuModNightcore)) distance *= 1.5F;
 
-                if (mods.Any(it => it is OsuModHalfTime)) distance *= 0.75F;
+        //        if (mods.Any(it => it is OsuModHalfTime)) distance *= 0.75F;
 
-                sum += distance;
+        //        sum += distance;
               
-            }
+        //    }
 
-            return sum / (beatmap.HitObjects.Count - 1);
-        }
+        //    return sum / (beatmap.HitObjects.Count - 1);
+        //}
 
         protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate)
         {
@@ -56,9 +56,11 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             double speedRating = Math.Sqrt(skills[1].DifficultyValue()) * difficulty_multiplier;
             double starRating = aimRating + speedRating + Math.Abs(aimRating - speedRating) / 2;
 
+            double distanceAverage = skills[2].DifficultyValue();
+            double distanceTop = skills[3].DifficultyValue();
+
             double strainAverage = ((OsuStrainSkill)skills[0]).DifficultyValueAverage();
             double strainMost = skills[0].DifficultyValue();
-            double distanceAverage = GetDistanceAverage(beatmap, mods);
 
             HitWindows hitWindows = new OsuHitWindows();
             hitWindows.SetDifficulty(beatmap.BeatmapInfo.BaseDifficulty.OverallDifficulty);
@@ -82,6 +84,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
                 AimStrainAverage = strainAverage,
                 AimStrainMost = strainMost,
                 DistanceAverage = distanceAverage,
+                DistanceTop = distanceTop,
                 SpeedStrain = speedRating,
                 ApproachRate = preempt > 1200 ? (1800 - preempt) / 120 : (1200 - preempt) / 150 + 5,
                 OverallDifficulty = (80 - hitWindowGreat) / 6,
@@ -109,7 +112,9 @@ namespace osu.Game.Rulesets.Osu.Difficulty
         protected override Skill[] CreateSkills(IBeatmap beatmap, Mod[] mods, double clockRate) => new Skill[]
         {
             new Aim(mods),
-            new Speed(mods)
+            new Speed(mods),
+            new DistanceAverage(mods),
+            new DistanceTop(mods),
         };
 
         protected override Mod[] DifficultyAdjustmentMods => new Mod[]

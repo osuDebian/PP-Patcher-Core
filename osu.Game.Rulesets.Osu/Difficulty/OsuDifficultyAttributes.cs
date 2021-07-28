@@ -11,6 +11,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
         public double AimStrainAverage { get; set; }
         public double AimStrainMost { get; set; }
         public double DistanceAverage { get; set; }
+        public double DistanceTop { get; set; }
         public double SpeedStrain { get; set; }
         public double ApproachRate { get; set; }
         public double OverallDifficulty { get; set; }

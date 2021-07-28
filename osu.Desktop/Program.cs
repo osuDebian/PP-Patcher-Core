@@ -46,18 +46,22 @@ namespace osu.Desktop
                 "maps/katagiri - Sendan Life (katagiri Bootleg) (Settia) [Destroy the World].osu",
                 "maps/ryu5150 - Louder than steel (ParkourWizard) [ok this is epic].osu",
                 "maps/GYZE - HONESTY (Bibbity Bill) [DISHONEST].osu",
-                "maps/Okazaki Taiiku - Kimi no Bouken (TV Size) (fieryrage) [New Adventure!].osu"
+                "maps/Okazaki Taiiku - Kimi no Bouken (TV Size) (fieryrage) [New Adventure!].osu",
+                "maps/Foreground Eclipse - Songs Compilation (Seni) [I Won't Say Farewell; Someday, We'll Meet Again].osu"
             };
 
             Mod[] modsNone = new Mod[]
             {
+                new OsuModRelax(),
                 //new OsuModDoubleTime(),
             };
 
             Mod[] modsDT = new Mod[]
             {
-                new OsuModDoubleTime(),
-                new OsuModHardRock(),
+                new OsuModRelax(),
+                //new OsuModDoubleTime(),
+                //new OsuModHardRock(),
+                new OsuModHidden(),
             };
 
             foreach (var route in routes)
@@ -76,7 +80,7 @@ namespace osu.Desktop
                 var ppCalculatorDT = new OsuPerformanceCalculator(ruleset, resultDT, perfectScoreInfoDT);
 
                 Console.WriteLine("  == " + route + " ==  ");
-                Console.WriteLine("bancho: " + ppCalculator.Calculate());
+                //Console.WriteLine("bancho: " + ppCalculator.Calculate());
                 Console.WriteLine("relax: " + ppCalculator.CalculateRelax());
                 Console.WriteLine("relaxDT: " + ppCalculatorDT.CalculateRelax());
             }
