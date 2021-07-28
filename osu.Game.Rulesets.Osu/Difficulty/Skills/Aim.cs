@@ -40,7 +40,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
 
                 if (osuCurrent.Angle != null && osuCurrent.Angle.Value > angle_bonus_begin)
                 {
-                    const double scale = 90;
+                    // 이걸 대체 왜하는거지?
+                    const double scale = 0;
 
                     var angleBonus = Math.Sqrt(
                         Math.Max(osuPrevious.JumpDistance - scale, 0)

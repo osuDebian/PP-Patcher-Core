@@ -42,7 +42,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             countMiss = Score.Statistics.GetValueOrDefault(HitResult.Miss);
 
             // Custom multipliers for NoFail and SpunOut.
-            double multiplier = 1.2; // This is being adjusted to keep the final pp value scaled around what it used to be when changing things
+            double multiplier = 1.4; // This is being adjusted to keep the final pp value scaled around what it used to be when changing things
 
             if (mods.Any(m => m is OsuModNoFail))
                 multiplier *= Math.Max(0.90, 1.0 - 0.02 * countMiss);
@@ -56,7 +56,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             double distanceTop = Attributes.DistanceTop;
             //Console.WriteLine(strainAverage + ", " + rawAim + "(" + (strainAverage / rawAim) + ")");
             //Console.WriteLine(strainAverage + ", " + strainMost + ", " + distanceAverage);
-            //Console.WriteLine(distanceAverage + ", " + distanceTop + ", " + (distanceAverage / distanceTop));
+            Console.WriteLine(distanceAverage + ", " + distanceTop + ", " + (distanceAverage / distanceTop));
 
 
             double aimValue = computeAimValueRelax();
@@ -150,12 +150,11 @@ namespace osu.Game.Rulesets.Osu.Difficulty
 
             double StreamThresholdLength = 0.7;
             double StreamFirst = Math.Max(StreamThresholdLength - JumpRate, 0);
-            double StreamNerfRateLength = Math.Max(1 - Math.Max(StreamFirst, 0) * 2, 0);
+            double StreamNerfRateLength = Math.Max(1 - Math.Max(StreamFirst, 0) * 3, 0);
 
-            //Console.WriteLine(StreamNerfRateLength);
+            Console.WriteLine(StreamNerfRateLength);
 
             double lengthBonus = 0.95 + 0.4 * Math.Min(1.0, totalHits / 2000.0) * StreamNerfRateLength;
-
 
             aimValue *= lengthBonus;
 
@@ -169,22 +168,23 @@ namespace osu.Game.Rulesets.Osu.Difficulty
 
             double approachRateFactor = 0.0;
             if (Attributes.ApproachRate > 10.33)
-                approachRateFactor = Attributes.ApproachRate - 10.33;
+                approachRateFactor = (Attributes.ApproachRate - 10.33) / 2;
             else if (Attributes.ApproachRate < 8.0)
                 approachRateFactor = 0.025 * (8.0 - Attributes.ApproachRate);
 
-            double approachRateTotalHitsFactor = 1.0 / (1.0 + Math.Exp(-(0.007 * (totalHits - 400))));
+            double approachRateTotalHitsFactor = 1.0 / (1.0 + Math.Exp(-(0.007 * (totalHits - 400) * StreamNerfRateLength)));
 
             double approachRateBonus = 1.0 + (0.03 + 0.37 * approachRateTotalHitsFactor) * approachRateFactor;
+            //aimValue *= approachRateBonus;
 
             // We want to give more reward for lower AR when it comes to aim and HD. This nerfs high AR and buffs lower AR.
 
             // low AR buff
             // aimValue *= log(10 + (12 - AR)^(1.52163)) / 2
             // hidden multiplier 1.5
-            double arBonus = Math.Log10(10 + Math.Pow((12.0 - Attributes.ApproachRate), 1.52163) * (mods.Any(h => h is OsuModHidden) ? 1.5 : 1));
-            //Console.WriteLine(arBonus);
-            aimValue *= arBonus;
+            double lowarBonus = Math.Log10(10 + Math.Min(Math.Pow((12 - Attributes.ApproachRate), 2.5), 190) * (mods.Any(h => h is OsuModHidden) ? 1.5 : 1));
+            Console.WriteLine(lowarBonus);
+            aimValue *= lowarBonus;
 
             // aim buff
             // aimValue *= max(DistanceTop - 0.6, 0)
@@ -203,14 +203,17 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             if (mods.Any(h => h is OsuModFlashlight))
             {
                 // Apply object-based bonus for flashlight.
-                flashlightBonus = 1.0 + 0.35 * Math.Min(1.0, totalHits / 200.0) +
+                flashlightBonus = 1.0 + (0.35 * Math.Min(1.0, totalHits / 200.0) +
                                   (totalHits > 200
                                       ? 0.3 * Math.Min(1.0, (totalHits - 200) / 300.0) +
                                         (totalHits > 500 ? (totalHits - 500) / 1200.0 : 0.0)
-                                      : 0.0);
+                                      : 0.0)) * StreamNerfRateLength;
             }
 
-            aimValue *= Math.Max(flashlightBonus, approachRateBonus);
+            aimValue *= Math.Max(approachRateBonus, flashlightBonus);
+
+            // 이걸 대체 왜한거지?
+            //aimValue *= Math.Max(flashlightBonus, approachRateBonus);
 
             // Scale the aim value with accuracy _slightly_
             aimValue *= 0.5 + accuracy / 2.0;
@@ -337,10 +340,10 @@ namespace osu.Game.Rulesets.Osu.Difficulty
 
             // Bonus for many hitcircles - it's harder to keep good accuracy up for longer
             // acc 스트림 너프
-            //double JumpRate = (Attributes.DistanceAverage / Attributes.DistanceTop);
-            //double StreamThresholdLength = 0.5;
-            //double StreamNerfRateLength = 1 - Math.Max(StreamThresholdLength - JumpRate, 0) * 1.5;
-            //accuracyValue *= Math.Min(1.15, Math.Pow(amountHitObjectsWithAccuracy / 1000.0, 0.3)) * StreamNerfRateLength;
+            double JumpRate = (Attributes.DistanceAverage / Attributes.DistanceTop);
+            double StreamThresholdLength = 0.7;
+            double StreamNerfRateLength = 1 - Math.Max((StreamThresholdLength - JumpRate) * 2.2, 0);
+            accuracyValue *= Math.Min(1.15, Math.Pow(amountHitObjectsWithAccuracy / 1000.0, 0.3) * StreamNerfRateLength);
 
             if (mods.Any(m => m is OsuModHidden))
                 accuracyValue *= 1.08;

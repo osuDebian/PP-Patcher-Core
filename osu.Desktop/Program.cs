@@ -60,8 +60,10 @@ namespace osu.Desktop
             {
                 new OsuModRelax(),
                 new OsuModDoubleTime(),
-                new OsuModHardRock(),
-                new OsuModHidden(),
+                new OsuModEasy(),
+                //new OsuModHardRock(),
+                //new OsuModHidden(),
+                //new OsuModFlashlight(),
             };
 
             foreach (var route in routes)
