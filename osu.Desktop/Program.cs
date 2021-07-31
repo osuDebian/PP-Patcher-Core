@@ -53,16 +53,19 @@ namespace osu.Desktop
             Mod[] modsNone = new Mod[]
             {
                 new OsuModRelax(),
-                //new OsuModDoubleTime(),
+                new OsuModDoubleTime(),
+                //new OsuModEasy(),
+                                //new OsuModHidden(),
+
             };
 
             Mod[] modsDT = new Mod[]
             {
                 new OsuModRelax(),
                 new OsuModDoubleTime(),
-                new OsuModEasy(),
+                //new OsuModEasy(),
                 //new OsuModHardRock(),
-                //new OsuModHidden(),
+                new OsuModHidden(),
                 //new OsuModFlashlight(),
             };
 
@@ -83,8 +86,8 @@ namespace osu.Desktop
 
                 Console.WriteLine("  == " + route + " ==  ");
                 //Console.WriteLine("bancho: " + ppCalculator.Calculate());
-                Console.WriteLine("relax: " + ppCalculator.CalculateRelax());
-                Console.WriteLine("relaxDT: " + ppCalculatorDT.CalculateRelax());
+                Console.WriteLine("before: " + ppCalculator.CalculateBefore());
+                Console.WriteLine("after: " + ppCalculatorDT.Calculate());
             }
 
             return 0;

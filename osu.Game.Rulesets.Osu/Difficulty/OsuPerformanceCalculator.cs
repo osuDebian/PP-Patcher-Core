@@ -42,7 +42,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             countMiss = Score.Statistics.GetValueOrDefault(HitResult.Miss);
 
             // Custom multipliers for NoFail and SpunOut.
-            double multiplier = 1.4; // This is being adjusted to keep the final pp value scaled around what it used to be when changing things
+            double multiplier = 1.3; // This is being adjusted to keep the final pp value scaled around what it used to be when changing things
 
             if (mods.Any(m => m is OsuModNoFail))
                 multiplier *= Math.Max(0.90, 1.0 - 0.02 * countMiss);
@@ -73,6 +73,53 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             {
                 categoryRatings.Add("Aim", aimValue);
                 categoryRatings.Add("Speed", 0);
+                categoryRatings.Add("Accuracy", accuracyValue);
+                categoryRatings.Add("OD", Attributes.OverallDifficulty);
+                categoryRatings.Add("AR", Attributes.ApproachRate);
+                categoryRatings.Add("Max Combo", Attributes.MaxCombo);
+            }
+
+            return totalValue;
+        }
+
+        public double CalculateBefore(Dictionary<string, double> categoryRatings = null)
+        {
+            mods = Score.Mods;
+            accuracy = Score.Accuracy;
+            scoreMaxCombo = Score.MaxCombo;
+            countGreat = Score.Statistics.GetValueOrDefault(HitResult.Great);
+            countOk = Score.Statistics.GetValueOrDefault(HitResult.Ok);
+            countMeh = Score.Statistics.GetValueOrDefault(HitResult.Meh);
+            countMiss = Score.Statistics.GetValueOrDefault(HitResult.Miss);
+
+            //if (mods.Any(it => it is OsuModRelax))
+            //{
+            //    return CalculateRelax(categoryRatings);
+            //}
+
+            // Custom multipliers for NoFail and SpunOut.
+            double multiplier = 1.12; // This is being adjusted to keep the final pp value scaled around what it used to be when changing things
+
+            if (mods.Any(m => m is OsuModNoFail))
+                multiplier *= Math.Max(0.90, 1.0 - 0.02 * countMiss);
+
+            if (mods.Any(m => m is OsuModSpunOut))
+                multiplier *= 1.0 - Math.Pow((double)Attributes.SpinnerCount / totalHits, 0.85);
+
+            double aimValue = computeAimValue();
+            double speedValue = computeSpeedValue();
+            double accuracyValue = computeAccuracyValue();
+            double totalValue =
+                Math.Pow(
+                    Math.Pow(aimValue, 1.1) +
+                    0 +
+                    Math.Pow(accuracyValue, 1.1), 1.0 / 1.1
+                ) * multiplier;
+
+            if (categoryRatings != null)
+            {
+                categoryRatings.Add("Aim", aimValue);
+                categoryRatings.Add("Speed", speedValue);
                 categoryRatings.Add("Accuracy", accuracyValue);
                 categoryRatings.Add("OD", Attributes.OverallDifficulty);
                 categoryRatings.Add("AR", Attributes.ApproachRate);
@@ -150,11 +197,11 @@ namespace osu.Game.Rulesets.Osu.Difficulty
 
             double StreamThresholdLength = 0.7;
             double StreamFirst = Math.Max(StreamThresholdLength - JumpRate, 0);
-            double StreamNerfRateLength = Math.Max(1 - Math.Max(StreamFirst, 0) * 3, 0);
+            double StreamNerfRateLength = Math.Max(1 - Math.Max(StreamFirst, 0) * 2.5, 0.25);
 
-            Console.WriteLine(StreamNerfRateLength);
+            Console.WriteLine(JumpRate);
 
-            double lengthBonus = 0.95 + 0.4 * Math.Min(1.0, totalHits / 2000.0) * StreamNerfRateLength;
+            double lengthBonus = 0.90 + 0.5 * Math.Min(1.0, totalHits / 2000.0) * StreamNerfRateLength;
 
             aimValue *= lengthBonus;
 
@@ -180,9 +227,11 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             // We want to give more reward for lower AR when it comes to aim and HD. This nerfs high AR and buffs lower AR.
 
             // low AR buff
-            // aimValue *= log(10 + (12 - AR)^(1.52163)) / 2
-            // hidden multiplier 1.5
-            double lowarBonus = Math.Log10(10 + Math.Min(Math.Pow((12 - Attributes.ApproachRate), 2.5), 190) * (mods.Any(h => h is OsuModHidden) ? 1.5 : 1));
+            // aimValue *= log(10 + (12 - AR)^(2.5)) / 2
+            // hidden multiplier 1.8
+            double lowarBonus = Math.Log10(10
+                + Math.Min(Math.Pow((12 - Attributes.ApproachRate), 2), 190)
+                * (mods.Any(h => h is OsuModHidden) ? 2 : 1));
             Console.WriteLine(lowarBonus);
             aimValue *= lowarBonus;
 
