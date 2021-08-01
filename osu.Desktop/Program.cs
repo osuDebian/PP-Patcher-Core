@@ -47,13 +47,17 @@ namespace osu.Desktop
                 "maps/ryu5150 - Louder than steel (ParkourWizard) [ok this is epic].osu",
                 "maps/GYZE - HONESTY (Bibbity Bill) [DISHONEST].osu",
                 "maps/Okazaki Taiiku - Kimi no Bouken (TV Size) (fieryrage) [New Adventure!].osu",
-                "maps/Foreground Eclipse - Songs Compilation (Seni) [I Won't Say Farewell; Someday, We'll Meet Again].osu"
+                "maps/Foreground Eclipse - Songs Compilation (Seni) [I Won't Say Farewell; Someday, We'll Meet Again].osu",
+                "maps/GALNERYUS - RAISE MY SWORD (Sotarks) [A THOUSAND FLAMES].osu",
+                "maps/kis-kis - ne uchi (Seni) [don't lecture me].osu",
+                "maps/Rhapsody Of Fire - Master of Peace (Chanci) [Nephilim].osu",
             };
 
             Mod[] modsNone = new Mod[]
             {
                 new OsuModRelax(),
                 new OsuModDoubleTime(),
+                //new OsuModHardRock(),
                 //new OsuModEasy(),
                                 //new OsuModHidden(),
 
@@ -65,7 +69,7 @@ namespace osu.Desktop
                 new OsuModDoubleTime(),
                 //new OsuModEasy(),
                 //new OsuModHardRock(),
-                new OsuModHidden(),
+                //new OsuModHidden(),
                 //new OsuModFlashlight(),
             };
 
@@ -79,31 +83,39 @@ namespace osu.Desktop
                 var perfectScoreInfo = GetPerfectScoreInfo(modsNone, beatmap, result);
 
                 var resultDT = diffCalculator.Calculate(modsDT);
-                var perfectScoreInfoDT = GetPerfectScoreInfo(modsDT, beatmap, resultDT);
+                var perfectScoreInfoDT = GetPerfectScoreInfo(modsDT, beatmap, resultDT, 0.98);
 
                 var ppCalculator = new OsuPerformanceCalculator(ruleset, result, perfectScoreInfo);
                 var ppCalculatorDT = new OsuPerformanceCalculator(ruleset, resultDT, perfectScoreInfoDT);
 
                 Console.WriteLine("  == " + route + " ==  ");
                 //Console.WriteLine("bancho: " + ppCalculator.Calculate());
-                Console.WriteLine("before: " + ppCalculator.CalculateBefore());
-                Console.WriteLine("after: " + ppCalculatorDT.Calculate());
+                Console.WriteLine("dt100: " + ppCalculator.Calculate());
+                Console.WriteLine("dt98 : " + ppCalculatorDT.Calculate());
             }
 
             return 0;
         }
 
-        public static ScoreInfo GetPerfectScoreInfo(Mod[] mods, Beatmap beatmap, DifficultyAttributes result)
+        public static ScoreInfo GetPerfectScoreInfo(Mod[] mods, Beatmap beatmap, DifficultyAttributes result, double acc = 1.0)
         {
             var perfectScoreInfo = new ScoreInfo()
             {
                 Mods = mods,
-                Accuracy = 1,
+                Accuracy = acc,
                 Combo = result.MaxCombo,
                 MaxCombo = result.MaxCombo,
             };
-            perfectScoreInfo.Statistics.Add(Game.Rulesets.Scoring.HitResult.Great, beatmap.HitObjects.Count);
-            perfectScoreInfo.Statistics.Add(Game.Rulesets.Scoring.HitResult.Ok, 0);
+
+            var objCount = beatmap.HitObjects.Count;
+            var countOk = 0;
+            while((6.0 * (objCount - countOk) + 2.0 * countOk) / (6.0 * objCount) > acc)
+            {
+                countOk++;                
+            }
+            //Console.WriteLine(countOk);
+            perfectScoreInfo.Statistics.Add(Game.Rulesets.Scoring.HitResult.Great, objCount - countOk);
+            perfectScoreInfo.Statistics.Add(Game.Rulesets.Scoring.HitResult.Ok, countOk);
             perfectScoreInfo.Statistics.Add(Game.Rulesets.Scoring.HitResult.Meh, 0);
             perfectScoreInfo.Statistics.Add(Game.Rulesets.Scoring.HitResult.Miss, 0);
 
