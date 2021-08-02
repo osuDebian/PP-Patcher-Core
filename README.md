@@ -1,3 +1,6 @@
+pp 관련 내용 독스
+https://docs.google.com/document/d/1y9ybKjLrsMdC7DTY68OtEocd8cQXizqVw_HXMxl-Kjc/edit
+
 <p align="center">
   <img width="500px" src="assets/lazer.png">
 </p>
