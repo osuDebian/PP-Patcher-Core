@@ -210,7 +210,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             //Console.WriteLine("lengthBonusRate: " + StreamFirst + ", " + JumpRate + ", " + (180 + (180.0) * (JumpRate - 0.3) * (1 / 0.4)));
             //if (JumpRate <= 0.3) StreamNerfRateLength = 0;
             //if (JumpRate >= 0.7) StreamNerfRateLength = 1;
-            double StreamNerfRateLength = Math.Max(1 - StreamFirst * 2.75, 0.1);
+            double StreamNerfRateLength = Math.Max(1 - StreamFirst * 2.75, 0);
 
 
 
@@ -257,8 +257,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             // stream nerf
             // aimValue *= 1 - max(0.5 - DistanceTop, 0)
             double StreamThreshold = 0.7;
-            double StreamNerfRate = 1 - Math.Max(StreamThreshold - JumpRate, 0) * 0.5;
-            //aimValue *= StreamNerfRate;
+            double StreamNerfRate = 1 - Math.Max(StreamThreshold - JumpRate, 0) * 0.25;
+            aimValue *= StreamNerfRate;
 
 
             double flashlightBonus = 1.0;
