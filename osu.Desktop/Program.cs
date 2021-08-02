@@ -37,40 +37,68 @@ namespace osu.Desktop
         [STAThread]
         public static int Main(string[] args)
         {
-            List<string> routes = new List<string>
-            {
-                "maps/SYU (from GALNERYUS) - REASON (BarkingMadDog) [A THOUSAND SWORDS].osu",
-                "maps/xi - Ascension to Heaven (Kroytz) [Final Moment].osu",
-                "maps/Wake Up, May'n! - One In A Billion (A r M i N) [Fantasy].osu",
-                "maps/Aitsuki Nakuru - Presenter (Hanazawa Kana) [Gift].osu",
-                "maps/katagiri - Sendan Life (katagiri Bootleg) (Settia) [Destroy the World].osu",
-                "maps/ryu5150 - Louder than steel (ParkourWizard) [ok this is epic].osu",
-                "maps/GYZE - HONESTY (Bibbity Bill) [DISHONEST].osu",
-                "maps/Okazaki Taiiku - Kimi no Bouken (TV Size) (fieryrage) [New Adventure!].osu",
-                "maps/Foreground Eclipse - Songs Compilation (Seni) [I Won't Say Farewell; Someday, We'll Meet Again].osu",
-                "maps/GALNERYUS - RAISE MY SWORD (Sotarks) [A THOUSAND FLAMES].osu",
-                "maps/kis-kis - ne uchi (Seni) [don't lecture me].osu",
-                "maps/Rhapsody Of Fire - Master of Peace (Chanci) [Nephilim].osu",
-            };
+            //List<string> routes = new List<string>
+            //{
+            //    "maps/SYU (from GALNERYUS) - REASON (BarkingMadDog) [A THOUSAND SWORDS].osu",
+            //    "maps/xi - Ascension to Heaven (Kroytz) [Final Moment].osu",
+            //    "maps/Wake Up, May'n! - One In A Billion (A r M i N) [Fantasy].osu",
+            //    "maps/Aitsuki Nakuru - Presenter (Hanazawa Kana) [Gift].osu",
+            //    "maps/katagiri - Sendan Life (katagiri Bootleg) (Settia) [Destroy the World].osu",
+            //    "maps/ryu5150 - Louder than steel (ParkourWizard) [ok this is epic].osu",
+            //    "maps/GYZE - HONESTY (Bibbity Bill) [DISHONEST].osu",
+            //    "maps/Okazaki Taiiku - Kimi no Bouken (TV Size) (fieryrage) [New Adventure!].osu",
+            //    "maps/Foreground Eclipse - Songs Compilation (Seni) [I Won't Say Farewell; Someday, We'll Meet Again].osu",
+            //    "maps/GALNERYUS - RAISE MY SWORD (Sotarks) [A THOUSAND FLAMES].osu",
+            //    "maps/kis-kis - ne uchi (Seni) [don't lecture me].osu",
+            //    "maps/Rhapsody Of Fire - Master of Peace (Chanci) [Nephilim].osu",
+            //    "maps/Kano - Dear Brave (Kowari) [Valor].osu",
+            //    "maps/9mm Parabellum Bullet - Inferno (ParkourWizard) [ok this is mattay].osu",
+            //    "maps/9mm Parabellum Bullet - Inferno (ParkourWizard) [ok this is monstrata].osu"
+            //};
 
-            Mod[] modsNone = new Mod[]
-            {
-                new OsuModRelax(),
-                new OsuModDoubleTime(),
-                //new OsuModHardRock(),
-                //new OsuModEasy(),
-                                //new OsuModHidden(),
+            string[] routes = Directory.GetFiles("maps");
 
-            };
-
-            Mod[] modsDT = new Mod[]
+            var list = new List<CalculateData>
             {
-                new OsuModRelax(),
-                new OsuModDoubleTime(),
-                //new OsuModEasy(),
-                //new OsuModHardRock(),
-                //new OsuModHidden(),
-                //new OsuModFlashlight(),
+                new CalculateData("rx", new Mod[] {
+                    new OsuModRelax(),
+                    //new OsuModHidden(),
+                    //new OsuModDoubleTime(),
+                }, 1),
+                new CalculateData("ezrx", new Mod[] {
+                    new OsuModRelax(),
+                    new OsuModEasy(),
+                    //new OsuModHidden(),
+                    //new OsuModDoubleTime(),
+                }, 1),
+                new CalculateData("dthdezrx", new Mod[] {
+                    new OsuModRelax(),
+                    new OsuModHidden(),
+                    new OsuModDoubleTime(),
+                    new OsuModEasy(),
+                }, 1),
+                new CalculateData("dthdrx", new Mod[] {
+                    new OsuModRelax(),
+                    new OsuModHidden(),
+                    new OsuModDoubleTime(),
+                }, 1),
+                new CalculateData("dthdrx98", new Mod[] {
+                    new OsuModRelax(),
+                    new OsuModHidden(),
+                    new OsuModDoubleTime(),
+                }, 0.98),
+                new CalculateData("dthdhrrx", new Mod[] {
+                    new OsuModRelax(),
+                    new OsuModDoubleTime(),
+                    new OsuModHidden(),
+                    new OsuModHardRock(),
+                }, 1),
+                new CalculateData("dthdhrrx98", new Mod[] {
+                    new OsuModRelax(),
+                    new OsuModDoubleTime(),
+                    new OsuModHidden(),
+                    new OsuModHardRock(),
+                }, 0.98)
             };
 
             foreach (var route in routes)
@@ -79,19 +107,16 @@ namespace osu.Desktop
                 var ruleset = new OsuRuleset();
                 var diffCalculator = new OsuDifficultyCalculator(ruleset, new DummyConversionBeatmap(beatmap));
 
-                var result = diffCalculator.Calculate(modsNone);
-                var perfectScoreInfo = GetPerfectScoreInfo(modsNone, beatmap, result);
-
-                var resultDT = diffCalculator.Calculate(modsDT);
-                var perfectScoreInfoDT = GetPerfectScoreInfo(modsDT, beatmap, resultDT, 0.98);
-
-                var ppCalculator = new OsuPerformanceCalculator(ruleset, result, perfectScoreInfo);
-                var ppCalculatorDT = new OsuPerformanceCalculator(ruleset, resultDT, perfectScoreInfoDT);
-
                 Console.WriteLine("  == " + route + " ==  ");
-                //Console.WriteLine("bancho: " + ppCalculator.Calculate());
-                Console.WriteLine("dt100: " + ppCalculator.Calculate());
-                Console.WriteLine("dt98 : " + ppCalculatorDT.Calculate());
+                foreach (var calculateData in list)
+                {
+                    var result = diffCalculator.Calculate(calculateData.mods);
+                    var scoreInfo = GetPerfectScoreInfo(calculateData.mods, beatmap, result, calculateData.acc);
+                    var ppCalculator = new OsuPerformanceCalculator(ruleset, result, scoreInfo);
+                    Console.WriteLine(calculateData.name + " "
+                        + Math.Round(ppCalculator.CalculateBefore()) + "pp -> "
+                        + Math.Round(ppCalculator.Calculate()) + "pp");
+                }
             }
 
             return 0;
@@ -222,6 +247,20 @@ namespace osu.Desktop
 
             return continueExecution;
         }
+    }
+
+    internal class CalculateData
+    {
+        public readonly string name;
+        public readonly Mod[] mods;
+        public readonly double acc;
+
+        public CalculateData(string name, Mod[] mods, double acc)
+        {
+            this.name = name;
+            this.mods = mods;
+            this.acc = acc;
+        }       
     }
 
     internal class DummyConversionBeatmap : WorkingBeatmap

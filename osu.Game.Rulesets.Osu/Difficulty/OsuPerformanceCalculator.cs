@@ -257,7 +257,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             // stream nerf
             // aimValue *= 1 - max(0.5 - DistanceTop, 0)
             double StreamThreshold = 0.7;
-            double StreamNerfRate = 1 - Math.Max(StreamThreshold - JumpRate, 0) * 0.25;
+            double StreamNerfRate = 1 - Math.Max(StreamThreshold - JumpRate, 0) * 0.15;
             aimValue *= StreamNerfRate;
 
 
