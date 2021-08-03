@@ -244,7 +244,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             // aimValue *= log(10 + (12 - AR)^(2.5)) / 2
             // hidden multiplier 1.8
             double lowarBonus = Math.Log10(10
-                + Math.Min(Math.Pow((12 - Attributes.ApproachRate), 2), 190)
+                + Math.Min(Math.Pow((12 - Attributes.ApproachRate), 2.25), 190)
                 * (mods.Any(h => h is OsuModHidden) ? 2 : 1));
             //Console.WriteLine(lowarBonus);
             aimValue *= lowarBonus;
@@ -257,7 +257,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             // stream nerf
             // aimValue *= 1 - max(0.5 - DistanceTop, 0)
             double StreamThreshold = 0.7;
-            double StreamNerfRate = 1 - Math.Max(StreamThreshold - JumpRate, 0) * 0.15;
+            double StreamNerfRate = 1 - Math.Max(StreamThreshold - JumpRate, 0) * 0.35;
             aimValue *= StreamNerfRate;
 
 
