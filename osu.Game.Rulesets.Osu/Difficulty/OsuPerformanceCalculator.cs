@@ -50,15 +50,6 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             if (mods.Any(m => m is OsuModSpunOut))
                 multiplier *= 1.0 - Math.Pow((double)Attributes.SpinnerCount / totalHits, 0.85);
 
-            double strainAverage = Attributes.AimStrainAverage;
-            double strainMost = Attributes.AimStrainMost;
-            double distanceAverage = Attributes.DistanceAverage;
-            double distanceTop = Attributes.DistanceTop;
-            //Console.WriteLine(strainAverage + ", " + rawAim + "(" + (strainAverage / rawAim) + ")");
-            //Console.WriteLine(strainAverage + ", " + strainMost + ", " + distanceAverage);
-            //Console.WriteLine(distanceAverage + ", " + distanceTop + ", " + (distanceAverage / distanceTop));
-
-
             double aimValue = computeAimValueRelax();
             //double speedValue = computeSpeedValue();
             double accuracyValue = computeAccuracyValueRelax();
@@ -112,7 +103,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             double totalValue =
                 Math.Pow(
                     Math.Pow(aimValue, 1.1) +
-                    0 +
+                    //Math.Pow(speedValue, 1.1) +
                     Math.Pow(accuracyValue, 1.1), 1.0 / 1.1
                 ) * multiplier;
 
