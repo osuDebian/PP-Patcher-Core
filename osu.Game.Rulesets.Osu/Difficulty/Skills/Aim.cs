@@ -54,9 +54,16 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             double jumpDistanceExp = applyDiminishingExp(osuCurrent.JumpDistance);
             double travelDistanceExp = applyDiminishingExp(osuCurrent.TravelDistance);
 
+            //return calculateForJump(result, jumpDistanceExp, travelDistanceExp, osuCurrent.StrainTime);
+            return calculateForJump(result, jumpDistanceExp, travelDistanceExp, osuCurrent.StrainTime) * 0.7 +
+                calculateForJump(0, jumpDistanceExp, travelDistanceExp, 400);
+        }
+
+        private double calculateForJump(double result, double jumpDistanceExp, double travelDistanceExp, double strainTime)
+        {
             return Math.Max(
-                result + (jumpDistanceExp + travelDistanceExp + Math.Sqrt(travelDistanceExp * jumpDistanceExp)) / Math.Max(osuCurrent.StrainTime, timing_threshold),
-                (Math.Sqrt(travelDistanceExp * jumpDistanceExp) + jumpDistanceExp + travelDistanceExp) / osuCurrent.StrainTime
+                result + (jumpDistanceExp + travelDistanceExp + Math.Sqrt(travelDistanceExp * jumpDistanceExp)) / Math.Max(strainTime, timing_threshold),
+                (Math.Sqrt(travelDistanceExp * jumpDistanceExp) + jumpDistanceExp + travelDistanceExp) / strainTime
             );
         }
 

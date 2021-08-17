@@ -53,11 +53,11 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             List<double> strains = GetCurrentStrainPeaks().OrderByDescending(d => d).ToList();
 
             // We are reducing the highest strains first to account for extreme difficulty spikes
-            //for (int i = 0; i < Math.Min(strains.Count, ReducedSectionCount); i++)
-            //{
-            //    double scale = Math.Log10(Interpolation.Lerp(1, 10, Math.Clamp((float)i / ReducedSectionCount, 0, 1)));
-            //    strains[i] *= Interpolation.Lerp(ReducedStrainBaseline, 1.0, scale);
-            //}
+            for (int i = 0; i < Math.Min(strains.Count, ReducedSectionCount); i++)
+            {
+                double scale = Math.Log10(Interpolation.Lerp(1, 10, Math.Clamp((float)i / ReducedSectionCount, 0, 1)));
+                strains[i] *= Interpolation.Lerp(ReducedStrainBaseline, 1.0, scale);
+            }
 
             // Difficulty is the weighted sum of the highest strains from every section.
             // We're sorting from highest to lowest strain.

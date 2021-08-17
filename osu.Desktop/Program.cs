@@ -87,23 +87,23 @@ namespace osu.Desktop
                     new OsuModHidden(),
                     new OsuModDoubleTime(),
                 }, 1),
-                new CalculateData("dthdrx98", new Mod[] {
+                new CalculateData("dthdrx97", new Mod[] {
                     new OsuModRelax(),
                     new OsuModHidden(),
                     new OsuModDoubleTime(),
-                }, 0.98),
+                }, 0.97),
                 new CalculateData("dthdhrrx", new Mod[] {
                     new OsuModRelax(),
                     new OsuModDoubleTime(),
                     new OsuModHidden(),
                     new OsuModHardRock(),
                 }, 1),
-                new CalculateData("dthdhrrx98", new Mod[] {
+                new CalculateData("dthdhrrx97", new Mod[] {
                     new OsuModRelax(),
                     new OsuModDoubleTime(),
                     new OsuModHidden(),
                     new OsuModHardRock(),
-                }, 0.98)
+                }, 0.97)
             };
 
             foreach (var route in routes)
