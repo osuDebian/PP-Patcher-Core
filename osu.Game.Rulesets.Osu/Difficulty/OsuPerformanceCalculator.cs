@@ -209,7 +209,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
 
 
             double lengthBonus = 0.95 + 0.8 * Math.Min(2.0, totalHits / 2000.0) * StreamNerfRateLength;
-
+            //Console.WriteLine(lengthBonus + ", " + JumpRate);
             aimValue *= lengthBonus;
 
             // Penalize misses by assessing # of misses relative to the total # of objects. Default a 3% reduction for any # of misses.
@@ -237,7 +237,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             // aimValue *= log(10 + (12 - AR)^(2.5)) / 2
             // hidden multiplier 1.8
             double lowarBonus = Math.Log10(9
-                + Math.Min(Math.Pow((12 - Attributes.ApproachRate), 2), 64)
+                + Math.Min(Math.Pow((12 - Attributes.ApproachRate), 1.8), 42.22)
                 * (mods.Any(h => h is OsuModHidden) ? 1.8 : 1));
             //Console.WriteLine(lowarBonus);
             aimValue *= lowarBonus;
@@ -249,9 +249,9 @@ namespace osu.Game.Rulesets.Osu.Difficulty
 
             // stream nerf
             // aimValue *= 1 - max(0.5 - DistanceTop, 0)
-            double StreamThreshold = 0.7;
-            double StreamNerfRate = 1 - Math.Max(StreamThreshold - JumpRate, 0) * 0.1;
-            aimValue *= StreamNerfRate;
+            //double StreamThreshold = 0.7;
+            //double StreamNerfRate = 1 - Math.Max(StreamThreshold - JumpRate, 0) * 0.1;
+            //aimValue *= StreamNerfRate;
 
 
             double flashlightBonus = 1.0;
