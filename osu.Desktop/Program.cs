@@ -65,18 +65,18 @@ namespace osu.Desktop
                     //new OsuModHidden(),
                     //new OsuModDoubleTime(),
                 }, 1),
-                new CalculateData("ezrx", new Mod[] {
-                    new OsuModRelax(),
-                    new OsuModEasy(),
-                    //new OsuModHidden(),
-                    //new OsuModDoubleTime(),
-                }, 1),
+                //new CalculateData("ezrx", new Mod[] {
+                //    new OsuModRelax(),
+                //    new OsuModEasy(),
+                //    //new OsuModHidden(),
+                //    //new OsuModDoubleTime(),
+                //}, 1),
                 new CalculateData("hdhrrx", new Mod[] {
                     new OsuModRelax(),
                     new OsuModHidden(),
                     new OsuModHardRock(),
                 }, 1),
-                new CalculateData("dthdezrx", new Mod[] {
+                new CalculateData("dtezrx", new Mod[] {
                     new OsuModRelax(),
                     new OsuModHidden(),
                     new OsuModDoubleTime(),
@@ -87,23 +87,23 @@ namespace osu.Desktop
                     new OsuModHidden(),
                     new OsuModDoubleTime(),
                 }, 1),
-                new CalculateData("dthdrx97", new Mod[] {
-                    new OsuModRelax(),
-                    new OsuModHidden(),
-                    new OsuModDoubleTime(),
-                }, 0.97),
+                //new CalculateData("dthdrx97", new Mod[] {
+                //    new OsuModRelax(),
+                //    new OsuModHidden(),
+                //    new OsuModDoubleTime(),
+                //}, 0.97),
                 new CalculateData("dthdhrrx", new Mod[] {
                     new OsuModRelax(),
                     new OsuModDoubleTime(),
                     new OsuModHidden(),
                     new OsuModHardRock(),
                 }, 1),
-                new CalculateData("dthdhrrx97", new Mod[] {
-                    new OsuModRelax(),
-                    new OsuModDoubleTime(),
-                    new OsuModHidden(),
-                    new OsuModHardRock(),
-                }, 0.97)
+                //new CalculateData("dthdhrrx97", new Mod[] {
+                //    new OsuModRelax(),
+                //    new OsuModDoubleTime(),
+                //    new OsuModHidden(),
+                //    new OsuModHardRock(),
+                //}, 0.97)
             };
 
             foreach (var route in routes)
@@ -112,15 +112,17 @@ namespace osu.Desktop
                 var ruleset = new OsuRuleset();
                 var diffCalculator = new OsuDifficultyCalculator(ruleset, new DummyConversionBeatmap(beatmap));
 
-                Console.WriteLine("  == " + route + " ==  ");
+                
+                
+                Console.WriteLine("  == " + Path.GetFileName(route) + " ==  ");
                 foreach (var calculateData in list)
                 {
                     var result = diffCalculator.Calculate(calculateData.mods);
                     var scoreInfo = GetPerfectScoreInfo(calculateData.mods, beatmap, result, calculateData.acc);
                     var ppCalculator = new OsuPerformanceCalculator(ruleset, result, scoreInfo);
-                    Console.WriteLine(calculateData.name + " "
-                        + Math.Round(ppCalculator.CalculateBefore()) + "pp -> "
-                        + Math.Round(ppCalculator.Calculate()) + "pp");
+                    Console.WriteLine(
+                        //Math.Round(ppCalculator.CalculateBefore()) + "pp -> " +
+                        Math.Round(ppCalculator.Calculate()) + "pp +" + calculateData.name.ToUpper());
                 }
             }
 
