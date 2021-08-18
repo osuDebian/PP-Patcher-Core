@@ -200,7 +200,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             //Console.WriteLine("lengthBonusRate: " + StreamFirst + ", " + JumpRate + ", " + (180 + (180.0) * (JumpRate - 0.3) * (1 / 0.4)));
             //if (JumpRate <= 0.3) StreamNerfRateLength = 0;
             //if (JumpRate >= 0.7) StreamNerfRateLength = 1;
-            double StreamNerfRateLength = Math.Max(1 - StreamFirst * 2.25, 0);
+            double StreamNerfRateLength = Math.Max(1 - StreamFirst * 2, 0);
 
             //Console.WriteLine(Attributes.HitCircleCount + ", "
             //    + totalHits + ", "
@@ -220,16 +220,16 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             if (Attributes.MaxCombo > 0)
                 aimValue *= Math.Min(Math.Pow(scoreMaxCombo, 0.8) / Math.Pow(Attributes.MaxCombo, 0.8), 1.0);
 
-            double approachRateFactor = 0.0;
-            if (Attributes.ApproachRate > 10.33)
-                approachRateFactor = (Attributes.ApproachRate - 10.33) / 4;
-            else if (Attributes.ApproachRate < 8.0)
-                approachRateFactor = 0.025 * (8.0 - Attributes.ApproachRate);
+            //double approachRateFactor = 0.0;
+            //if (Attributes.ApproachRate > 10.33)
+            //    approachRateFactor = (Attributes.ApproachRate - 10.33) / 4;
+            //else if (Attributes.ApproachRate < 8.0)
+            //    approachRateFactor = 0.025 * (8.0 - Attributes.ApproachRate);
 
-            double approachRateTotalHitsFactor = 1.0 / (1.0 + Math.Exp(-(0.007 * (totalHits * StreamNerfRateLength - 400))));
+            //double approachRateTotalHitsFactor = 1.0 / (1.0 + Math.Exp(-(0.007 * (totalHits * StreamNerfRateLength - 400))));
 
-            double approachRateBonus = 1.0 + (0.03 + 0.37 * approachRateTotalHitsFactor) * approachRateFactor;
-            aimValue *= approachRateBonus;
+            //double approachRateBonus = 1.0 + (0.03 + 0.37 * approachRateTotalHitsFactor) * approachRateFactor;
+            //aimValue *= approachRateBonus;
 
             // We want to give more reward for lower AR when it comes to aim and HD. This nerfs high AR and buffs lower AR.
 
@@ -237,7 +237,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             // aimValue *= log(10 + (12 - AR)^(2.5)) / 2
             // hidden multiplier 1.8
             double lowarBonus = Math.Log10(9
-                + Math.Min(Math.Pow((12 - Attributes.ApproachRate), 1.8), 42.22)
+                + Math.Min(Math.Pow((12 - Attributes.ApproachRate), 2), 64) // 42.22
                 * (mods.Any(h => h is OsuModHidden) ? 1.8 : 1));
             //Console.WriteLine(lowarBonus);
             aimValue *= lowarBonus;
