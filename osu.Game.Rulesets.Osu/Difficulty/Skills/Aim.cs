@@ -54,6 +54,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             double jumpDistanceExp = applyDiminishingExp(osuCurrent.JumpDistance);
             double travelDistanceExp = applyDiminishingExp(osuCurrent.TravelDistance);
 
+            // 기본적으로 점프에 대해 계산하고, 노트간 텀을 400ms로 고정해 계산한 점프를 더한다.
+            // 이렇게 되면 디스턴스는 짧은데 텀도 짧아(dt) 넓은 점프로 간주되는 문제를 해소한다.
             //return calculateForJump(result, jumpDistanceExp, travelDistanceExp, osuCurrent.StrainTime);
             return calculateForJump(result, jumpDistanceExp, travelDistanceExp, osuCurrent.StrainTime) * 0.8 +
                 calculateForJump(0, jumpDistanceExp, travelDistanceExp, 600);

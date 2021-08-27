@@ -186,15 +186,21 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             double aimValue = Math.Pow(5.0 * Math.Max(1.0, rawAim / 0.0675) - 4.0, 3.0) / 100000.0;
 
             // Longer maps are worth more
-            // ������ ��Ÿ ������ ū ������ ���� ������ ũ�� ��ƾ��Ѵ�
+            // 릴렉스 연타 버프의 큰 원인은 갯수 버프가 크다 잡아야한다
+            // 연타를 파악하는 방법이 근본적으로 쉽진 않지만 통계적 방법으로 간단하게 구해볼 수는 있다.
+            // 먼저 가장 넓은 노트 점프 거리에 대해 상위 n%의 평균(a)과 모든 노트 점프 거리에 대한 평균을 구한다(b).
+            // b를 a로 나누게 되면 반드시 0에서 1 사이 값이 나온다(JumpRate).
+            // 이 값이 낮다면 디스턴스가 넓은 부분에 비해 디스턴스가 좁은 부분이 매우 많다는 것으로 해석할 수 있다. 
+            // 디스턴스만 본다면 연타가 점프에 비해 좁기 때문에 JumpRate가 낮아진다.
+
             // stream nerf
-            // aimValue *= 1 - max(0.5 - DistanceTop, 0)
+            
             double JumpRate = (Attributes.DistanceAverage / Attributes.DistanceTop);
             double StreamThresholdLength = 0.7;
             double StreamFirst = Math.Max(StreamThresholdLength - JumpRate, 0);
             //double StreamFirst = Math.Max((1.0 / 2.0) * Math.Cos(toRadians(180 + (180.0) * (JumpRate - 0.3) * (1 / 0.4))) + 0.5, 0);
-            // 0.3�� ���϶� cos(180)
-            // 0.7�� ���϶� cos(360)
+            // 0.3의 값일때 cos(180)
+            // 0.7의 값일때 cos(360)
             // 1 / 2 * cos(180 + (180) * (x - 0.3) * (1 / 0.4)) + 1
             //double StreamNerfRateLength = 1 - Math.Max(StreamFirst * 1.2, 0);
             //Console.WriteLine("lengthBonusRate: " + StreamFirst + ", " + JumpRate + ", " + (180 + (180.0) * (JumpRate - 0.3) * (1 / 0.4)));
@@ -220,6 +226,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             if (Attributes.MaxCombo > 0)
                 aimValue *= Math.Min(Math.Pow(scoreMaxCombo, 0.8) / Math.Pow(Attributes.MaxCombo, 0.8), 1.0);
 
+            // 기존 고AR 보너스, 저AR보너스 삭제
+            // 저AR보너스는 아래에 다시 개발
             //double approachRateFactor = 0.0;
             //if (Attributes.ApproachRate > 10.33)
             //    approachRateFactor = (Attributes.ApproachRate - 10.33) / 4;
@@ -234,6 +242,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             // We want to give more reward for lower AR when it comes to aim and HD. This nerfs high AR and buffs lower AR.
 
             // low AR buff
+            // 이지 유저 보완 코드.
+            // AR이 낮으면 낮을수록 아주 크게 버프받는다. AR 4까지 보장
             // aimValue *= log(10 + (12 - AR)^(2.5)) / 2
             // hidden multiplier 1.8
             double lowarBonus = Math.Log10(9
@@ -259,16 +269,16 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             if (mods.Any(h => h is OsuModFlashlight))
             {
                 // Apply object-based bonus for flashlight.
+                
                 flashlightBonus = 1.0 + (0.35 * Math.Min(1.0, totalHits / 200.0) +
                                   (totalHits > 200
                                       ? 0.3 * Math.Min(1.0, (totalHits - 200) / 300.0) +
                                         (totalHits > 500 ? (totalHits - 500) / 1200.0 : 0.0)
-                                      : 0.0)) * StreamNerfRateLength;
+                                      : 0.0));
             }
             aimValue *= flashlightBonus;
-            //aimValue *= Math.Max(approachRateBonus, flashlightBonus);
 
-            // �̰� ��ü ���Ѱ���?
+            // 이걸 대체 왜한거지?
             //aimValue *= Math.Max(flashlightBonus, approachRateBonus);
 
             // Scale the aim value with accuracy _slightly_
@@ -396,7 +406,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             double accuracyValue = Math.Pow(1.52163, Attributes.OverallDifficulty) * Math.Pow(betterAccuracyPercentage, 26) * 2.83;
 
             // Bonus for many hitcircles - it's harder to keep good accuracy up for longer
-            // acc ��Ʈ�� ����
+            // acc 스트림 너프
             double JumpRate = (Attributes.DistanceAverage / Attributes.DistanceTop);
             double StreamThresholdLength = 0.7;
             double StreamFirstLength = Math.Max((StreamThresholdLength - JumpRate), 0);
