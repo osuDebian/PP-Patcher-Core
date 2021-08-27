@@ -56,7 +56,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
 
             //return calculateForJump(result, jumpDistanceExp, travelDistanceExp, osuCurrent.StrainTime);
             return calculateForJump(result, jumpDistanceExp, travelDistanceExp, osuCurrent.StrainTime) * 0.8 +
-                calculateForJump(0, jumpDistanceExp, travelDistanceExp, 400);
+                calculateForJump(0, jumpDistanceExp, travelDistanceExp, 600);
         }
 
         private double calculateForJump(double result, double jumpDistanceExp, double travelDistanceExp, double strainTime)
