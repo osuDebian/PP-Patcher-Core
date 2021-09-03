@@ -98,6 +98,12 @@ namespace osu.Desktop
                     new OsuModHidden(),
                     new OsuModHardRock(),
                 }, 1),
+                new CalculateData("dthdhrrx", new Mod[] {
+                    new OsuModRelax(),
+                    new OsuModDoubleTime(),
+                    new OsuModHidden(),
+                    new OsuModHardRock(),
+                }, 0.97),
                 //new CalculateData("dthdhrrx97", new Mod[] {
                 //    new OsuModRelax(),
                 //    new OsuModDoubleTime(),
