@@ -37,6 +37,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             List<double> strains = GetCurrentStrainPeaks().OrderByDescending(d => d).ToList();
 			
 			double sum = 0;
+
+
 			
 			foreach (double strain in strains.OrderByDescending(d => d)) {
 				sum += strain;

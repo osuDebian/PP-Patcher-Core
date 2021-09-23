@@ -21,6 +21,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
     public class OsuDifficultyCalculator : DifficultyCalculator
     {
         private const double difficulty_multiplier = 0.0675;
+        private OsuPerNoteDatabase database = new OsuPerNoteDatabase();
 
         public OsuDifficultyCalculator(Ruleset ruleset, WorkingBeatmap beatmap)
             : base(ruleset, beatmap)
@@ -47,6 +48,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty
         //    return sum / (beatmap.HitObjects.Count - 1);
         //}
 
+        
+
         protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate)
         {
             if (beatmap.HitObjects.Count == 0)
@@ -61,6 +64,9 @@ namespace osu.Game.Rulesets.Osu.Difficulty
 
             double strainAverage = ((OsuStrainSkill)skills[0]).DifficultyValueAverage();
             double strainMost = skills[0].DifficultyValue();
+
+            
+            //Console.WriteLine(skills[4].DifficultyValue());
 
             HitWindows hitWindows = new OsuHitWindows();
             hitWindows.SetDifficulty(beatmap.BeatmapInfo.BaseDifficulty.OverallDifficulty);
@@ -111,10 +117,11 @@ namespace osu.Game.Rulesets.Osu.Difficulty
 
         protected override Skill[] CreateSkills(IBeatmap beatmap, Mod[] mods, double clockRate) => new Skill[]
         {
-            new Aim(mods),
+            new Aim(database, mods),
             new Speed(mods),
             new DistanceAverage(mods),
             new DistanceTop(mods),
+            
         };
 
         protected override Mod[] DifficultyAdjustmentMods => new Mod[]

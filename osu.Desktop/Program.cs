@@ -87,6 +87,11 @@ namespace osu.Desktop
                     new OsuModHidden(),
                     new OsuModDoubleTime(),
                 }, 1),
+                new CalculateData("dtrx", new Mod[] {
+                    new OsuModRelax(),
+                    //new OsuModHidden(),
+                    new OsuModDoubleTime(),
+                }, 1),
                 //new CalculateData("dthdrx97", new Mod[] {
                 //    new OsuModRelax(),
                 //    new OsuModHidden(),
@@ -98,7 +103,7 @@ namespace osu.Desktop
                     new OsuModHidden(),
                     new OsuModHardRock(),
                 }, 1),
-                new CalculateData("dthdhrrx", new Mod[] {
+                new CalculateData("dthdhrrx97", new Mod[] {
                     new OsuModRelax(),
                     new OsuModDoubleTime(),
                     new OsuModHidden(),

@@ -45,7 +45,7 @@ namespace osu.Game.Rulesets.Difficulty.Skills
 
         private double currentSectionEnd;
 
-        private readonly List<double> strainPeaks = new List<double>();
+        protected readonly List<double> strainPeaks = new List<double>();
 
         protected StrainSkill(Mod[] mods)
             : base(mods)
