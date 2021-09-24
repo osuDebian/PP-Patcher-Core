@@ -214,7 +214,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             //    + StreamNerfRateLength);
 
 
-            double lengthBonus = 0.95 + 0.6 * Math.Min(2.0, totalHits / 2000.0) * StreamNerfRateLength;
+            double lengthBonus = 0.95 + 0.4 * Math.Min(2.0, totalHits / 2000.0) * StreamNerfRateLength;
             //Console.WriteLine(lengthBonus + ", " + JumpRate);
             aimValue *= lengthBonus;
 

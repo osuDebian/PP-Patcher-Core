@@ -59,9 +59,9 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
 
             double ScaleBonusDeltaTime = 1 + (osuCurrent.ScalingFactor - 1) * 0.1;
             //Console.WriteLine(index);
-            double angleBonus = database.strainsNoteAngle[index] * 0.05;
+            double angleBonus = database.strainsNoteAngle[index] * 0.04;
             double fingerControlBonus = database.strainsFingerControl[index] * 0.01;
-            double sliderVelocityBonus = database.strainsSliderVelocity[index] * 0.1;
+            double sliderVelocityBonus = database.strainsSliderVelocity[index] * 0.08;
 
             double totalBonus = 1 + angleBonus + fingerControlBonus + sliderVelocityBonus;
 
@@ -70,8 +70,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             // 이렇게 되면 디스턴스는 짧은데 텀도 짧아(dt) 넓은 점프로 간주되는 문제를 해소한다.
             //return calculateForJump(result, jumpDistanceExp, travelDistanceExp, osuCurrent.StrainTime);
             return totalBonus *
-                (calculateForJump(0, jumpDistanceExp * ScaleBonusDeltaTime, travelDistanceExp * ScaleBonusDeltaTime, osuCurrent.StrainTime) * 0.6 +
-                calculateForJump(0, jumpDistanceExp * osuCurrent.ScalingFactor, travelDistanceExp * osuCurrent.ScalingFactor, 500));
+                (calculateForJump(0, jumpDistanceExp * ScaleBonusDeltaTime, travelDistanceExp * ScaleBonusDeltaTime, osuCurrent.StrainTime) * 0.65 +
+                calculateForJump(0, jumpDistanceExp * osuCurrent.ScalingFactor, travelDistanceExp * osuCurrent.ScalingFactor, 450));
         }
 
         private double calculateForJump(double result, double jumpDistanceExp, double travelDistanceExp, double strainTime)
