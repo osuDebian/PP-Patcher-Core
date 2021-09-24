@@ -33,6 +33,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
                     result = Math.Abs(OsuSlider.Velocity - lastVelocity);
                 }
                 lastVelocity = OsuSlider.Velocity;
+
+                result += OsuSlider.Velocity / 10;
             }
 
             return result;

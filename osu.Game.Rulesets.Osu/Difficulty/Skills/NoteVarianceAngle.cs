@@ -40,7 +40,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             var value = Math.Sin(Math.Abs(angle - lastAngle) / 2);
 
             // 150bpm 미만은 둔각일때 보너스
-            value += Math.Sin(angle / 2) / 3;
+            value += Math.Sin(angle / 2) / 8;
 
             // 150bpm 이상은 예각일때 보너스 제공
             if (deltaTimeToBpm >= 150)
