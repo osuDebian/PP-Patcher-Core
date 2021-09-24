@@ -35,17 +35,18 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             if (beatmap.HitObjects.Count == 0)
                 return new OsuDifficultyAttributes { Mods = mods, Skills = skills };
 
-            double aimRating = Math.Sqrt(skills[0].DifficultyValue()) * difficulty_multiplier;
-            double speedRating = Math.Sqrt(skills[1].DifficultyValue()) * difficulty_multiplier;
+            double aimRating = Math.Sqrt(skills[1].DifficultyValue()) * difficulty_multiplier;
+            double speedRating = Math.Sqrt(skills[2].DifficultyValue()) * difficulty_multiplier;
             double starRating = aimRating + speedRating + Math.Abs(aimRating - speedRating) / 2;
 
-            double distanceAverage = skills[2].DifficultyValue();
-            double distanceTop = skills[3].DifficultyValue();
+            double distanceAverage = skills[3].DifficultyValue();
+            double distanceTop = skills[4].DifficultyValue();
 
-            double strainAverage = ((OsuStrainSkill)skills[0]).DifficultyValueAverage();
-            double strainMost = skills[0].DifficultyValue();
+            double strainAverage = ((OsuStrainSkill)skills[1]).DifficultyValueAverage();
+            double strainMost = skills[1].DifficultyValue();
 
-            
+            double aimRatingRelax = Math.Sqrt(skills[0].DifficultyValue()) * difficulty_multiplier;
+
             //Console.WriteLine(skills[4].DifficultyValue());
 
             HitWindows hitWindows = new OsuHitWindows();
@@ -67,6 +68,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
                 StarRating = starRating,
                 Mods = mods,
                 AimStrain = aimRating,
+                AimStrainRelax = aimRatingRelax,
                 AimStrainAverage = strainAverage,
                 AimStrainMost = strainMost,
                 DistanceAverage = distanceAverage,
@@ -105,6 +107,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
         protected override Skill[] CreateSkills(IBeatmap beatmap, Mod[] mods, double clockRate) => new Skill[]
         {
             new Aim(database, mods),
+            new AimStandard(database, mods),
             new Speed(mods),
             new DistanceAverage(mods),
             new DistanceTop(mods),

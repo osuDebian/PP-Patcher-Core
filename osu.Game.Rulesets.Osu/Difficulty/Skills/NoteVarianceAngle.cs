@@ -12,7 +12,7 @@ using osu.Game.Rulesets.Osu.Difficulty.Preprocessing;
 
 namespace osu.Game.Rulesets.Osu.Difficulty.Skills
 {
-    public class NoteVarianceAngle : OsuPerNoteStrainSkill
+    public class NoteVarianceAngle : PerNoteStrainSkill
     {
         protected override double SkillMultiplier => 1;
 
@@ -24,20 +24,29 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
 
         protected override double StrainValueOf(DifficultyHitObject current)
         {
-            // 150bpm을 기준으로 하여
-            // 150bpm 미만은 둔각일때 보너스
-            // 150bpm 이상은 예각일때 보너스 제공
+            var lastAngle = 0.0;
+            if(Previous.Count > 0)
+            {
+                var osuPast = (OsuDifficultyHitObject)Previous[0];
+                lastAngle = osuPast.Angle ?? 0;
+            }
             var osuCurrent = (OsuDifficultyHitObject)current;
-
+            
             var deltaTimeToBpm = 15000 / current.DeltaTime;
 
             var angle = osuCurrent.Angle ?? 0;
-            var value = Math.Sin(angle / 2);
 
-            if(deltaTimeToBpm >= 150)
+            // 각도 변화 값
+            var value = Math.Sin(Math.Abs(angle - lastAngle) / 2);
+
+            // 150bpm 미만은 둔각일때 보너스
+            value += Math.Sin(angle / 2) / 3;
+
+            // 150bpm 이상은 예각일때 보너스 제공
+            if (deltaTimeToBpm >= 150)
             {
                 // 200bpm까지 유효
-                value += Math.Sin(Math.Max((Math.PI / 2 - angle), 0)) * Math.Min((deltaTimeToBpm - 150), 50) / 50 * 1.5;
+                value += Math.Sin(Math.Max((Math.PI / 2 - angle), 0)) * Math.Min((deltaTimeToBpm - 150), 50) / 50 * 2;
             }
 
             return value;

@@ -178,7 +178,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
 
         private double computeAimValueRelax()
         {
-            double rawAim = Attributes.AimStrain;
+            double rawAim = Attributes.AimStrainRelax;
 
             if (mods.Any(m => m is OsuModTouchDevice))
                 rawAim = Math.Pow(rawAim, 0.8);
@@ -206,7 +206,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             //Console.WriteLine("lengthBonusRate: " + StreamFirst + ", " + JumpRate + ", " + (180 + (180.0) * (JumpRate - 0.3) * (1 / 0.4)));
             //if (JumpRate <= 0.3) StreamNerfRateLength = 0;
             //if (JumpRate >= 0.7) StreamNerfRateLength = 1;
-            double StreamNerfRateLength = Math.Max(1 - StreamFirst * 1.5, 0);
+            double StreamNerfRateLength = Math.Max(1 - StreamFirst, 0);
 
             //Console.WriteLine(Attributes.HitCircleCount + ", "
             //    + totalHits + ", "
@@ -250,7 +250,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             // hidden multiplier 1.8
             double lowarBonus = Math.Log10(9
                 + Math.Pow(Math.Min(12 - Attributes.ApproachRate, 8), 1.5) * 2 // 42.22
-                * (mods.Any(h => h is OsuModHidden) ? 1.2 : 1));
+                * (mods.Any(h => h is OsuModHidden) ? 1.5 : 1));
             //Console.WriteLine(lowarBonus);
             aimValue *= lowarBonus;
 
@@ -405,14 +405,14 @@ namespace osu.Game.Rulesets.Osu.Difficulty
 
             // Lots of arbitrary values from testing.
             // Considering to use derivation from perfect accuracy in a probabilistic manner - assume normal distribution
-            double accuracyValue = Math.Pow(1.52163, Attributes.OverallDifficulty) * Math.Pow(betterAccuracyPercentage, 26) * 2.83;
+            double accuracyValue = Math.Pow(1.52163, Attributes.OverallDifficulty) * Math.Pow(betterAccuracyPercentage, 26) * 2.83 * 1.1;
 
             // Bonus for many hitcircles - it's harder to keep good accuracy up for longer
             // acc 스트림 너프
             double JumpRate = (Attributes.DistanceAverage / Attributes.DistanceTop);
             double StreamThresholdLength = 0.7;
             double StreamFirstLength = Math.Max((StreamThresholdLength - JumpRate), 0);
-            double StreamNerfRateLength = Math.Max(1 - StreamFirstLength * 1.5, 0.05);
+            double StreamNerfRateLength = Math.Max(1 - StreamFirstLength, 0.05);
             //Console.WriteLine(StreamNerfRateLength);
             //Console.WriteLine(Math.Min(1.15, Math.Pow(amountHitObjectsWithAccuracy / 2000.0 * StreamNerfRateLength, 0.3)));
             accuracyValue *= Math.Min(1.15, Math.Pow(amountHitObjectsWithAccuracy / 1000.0 * StreamNerfRateLength, 0.3));
@@ -441,7 +441,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
 
             // Lots of arbitrary values from testing.
             // Considering to use derivation from perfect accuracy in a probabilistic manner - assume normal distribution
-            double accuracyValue = Math.Pow(1.52163, Attributes.OverallDifficulty) * Math.Pow(betterAccuracyPercentage, 26) * 2.83 * 1.05;
+            double accuracyValue = Math.Pow(1.52163, Attributes.OverallDifficulty) * Math.Pow(betterAccuracyPercentage, 24) * 2.83;
 
             // Bonus for many hitcircles - it's harder to keep good accuracy up for longer
             accuracyValue *= Math.Min(1.15, Math.Pow(amountHitObjectsWithAccuracy / 2000.0, 0.3));

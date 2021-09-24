@@ -7,6 +7,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
 {
     public class OsuDifficultyAttributes : DifficultyAttributes
     {
+        public double AimStrainRelax { get; set; }
         public double AimStrain { get; set; }
         public double AimStrainAverage { get; set; }
         public double AimStrainMost { get; set; }
