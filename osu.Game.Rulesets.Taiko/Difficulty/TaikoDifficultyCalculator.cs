@@ -9,6 +9,7 @@ using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Difficulty.Skills;
 using osu.Game.Rulesets.Mods;
+using osu.Game.Rulesets.Osu.Difficulty.Skills;
 using osu.Game.Rulesets.Scoring;
 using osu.Game.Rulesets.Taiko.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Taiko.Difficulty.Skills;
@@ -62,7 +63,11 @@ namespace osu.Game.Rulesets.Taiko.Difficulty
             return taikoDifficultyHitObjects;
         }
 
-        protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate)
+        protected override void ProcessPerNoteStrainSkill(PerNoteStrainSkill[] preloadedStrainSkills)
+        {
+
+        }
+        protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, PerNoteStrainSkill[] preloadedSkills, Skill[] skills, double clockRate)
         {
             if (beatmap.HitObjects.Count == 0)
                 return new TaikoDifficultyAttributes { Mods = mods, Skills = skills };
@@ -100,6 +105,11 @@ namespace osu.Game.Rulesets.Taiko.Difficulty
                 Skills = skills
             };
         }
+
+        protected override PerNoteStrainSkill[] GetPreLoadedSkills(IBeatmap beatmap, Mod[] mods, double clockRate) => new PerNoteStrainSkill[]
+        {
+            
+        };
 
         /// <summary>
         /// Calculates the penalty for the stamina skill for maps with low colour difficulty.

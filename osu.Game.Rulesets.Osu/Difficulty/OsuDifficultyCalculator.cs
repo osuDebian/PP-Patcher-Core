@@ -26,31 +26,11 @@ namespace osu.Game.Rulesets.Osu.Difficulty
         public OsuDifficultyCalculator(Ruleset ruleset, WorkingBeatmap beatmap)
             : base(ruleset, beatmap)
         {
+
         }
 
-        //public double GetDistanceAverage(IBeatmap beatmap, Mod[] mods)
-        //{
-        //    double sum = 0;
-        //    for(int i = 0; i < beatmap.HitObjects.Count - 1; i++)
-        //    {
-        //        var obj1 = (OsuHitObject) beatmap.HitObjects[i];
-        //        var obj2 = (OsuHitObject) beatmap.HitObjects[i + 1];
-        //        var distance = (obj2.Position - obj1.Position).Length;
 
-        //        if (mods.Any(it => it is OsuModDoubleTime || it is OsuModNightcore)) distance *= 1.5F;
-
-        //        if (mods.Any(it => it is OsuModHalfTime)) distance *= 0.75F;
-
-        //        sum += distance;
-              
-        //    }
-
-        //    return sum / (beatmap.HitObjects.Count - 1);
-        //}
-
-        
-
-        protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate)
+        protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, PerNoteStrainSkill[] preloadedSkills, Skill[] skills, double clockRate)
         {
             if (beatmap.HitObjects.Count == 0)
                 return new OsuDifficultyAttributes { Mods = mods, Skills = skills };
@@ -115,6 +95,13 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             }
         }
 
+        protected override PerNoteStrainSkill[] GetPreLoadedSkills(IBeatmap beatmap, Mod[] mods, double clockRate) => new PerNoteStrainSkill[]
+        {
+            new NoteVarianceAngle(beatmap, mods, clockRate),
+            new NoteVarianceFingerControl(beatmap, mods, clockRate),
+            new NoteVarianceSliderVelocity(beatmap, mods, clockRate),
+        };
+
         protected override Skill[] CreateSkills(IBeatmap beatmap, Mod[] mods, double clockRate) => new Skill[]
         {
             new Aim(database, mods),
@@ -123,6 +110,15 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             new DistanceTop(mods),
             
         };
+
+        protected override void ProcessPerNoteStrainSkill(PerNoteStrainSkill[] preloadedStrainSkills)
+        {
+            //Console.WriteLine(preloadedStrainSkills[0].GetAllStrainPeaks().Count);
+
+            database.strainsNoteAngle = preloadedStrainSkills[0].GetAllStrainPeaks();
+            database.strainsFingerControl = preloadedStrainSkills[1].GetAllStrainPeaks();
+            database.strainsSliderVelocity = preloadedStrainSkills[2].GetAllStrainPeaks();
+        }
 
         protected override Mod[] DifficultyAdjustmentMods => new Mod[]
         {

@@ -14,6 +14,7 @@ using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Difficulty.Skills;
 using osu.Game.Rulesets.Mods;
+using osu.Game.Rulesets.Osu.Difficulty.Skills;
 
 namespace osu.Game.Rulesets.Catch.Difficulty
 {
@@ -28,7 +29,7 @@ namespace osu.Game.Rulesets.Catch.Difficulty
         {
         }
 
-        protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate)
+        protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, PerNoteStrainSkill[] preloadedSkills, Skill[] skills, double clockRate)
         {
             if (beatmap.HitObjects.Count == 0)
                 return new CatchDifficultyAttributes { Mods = mods, Skills = skills };
@@ -79,6 +80,18 @@ namespace osu.Game.Rulesets.Catch.Difficulty
                 new Movement(mods, halfCatcherWidth, clockRate),
             };
         }
+
+        protected override void ProcessPerNoteStrainSkill(PerNoteStrainSkill[] preloadedStrainSkills)
+        {
+
+        }
+
+        protected override PerNoteStrainSkill[] GetPreLoadedSkills(IBeatmap beatmap, Mod[] mods, double clockRate) => new PerNoteStrainSkill[]
+        {
+
+        };
+
+
 
         protected override Mod[] DifficultyAdjustmentMods => new Mod[]
         {

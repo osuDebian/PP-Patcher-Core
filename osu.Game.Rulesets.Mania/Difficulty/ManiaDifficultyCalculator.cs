@@ -17,6 +17,7 @@ using osu.Game.Rulesets.Mania.Objects;
 using osu.Game.Rulesets.Mania.Scoring;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Objects;
+using osu.Game.Rulesets.Osu.Difficulty.Skills;
 using osu.Game.Rulesets.Scoring;
 
 namespace osu.Game.Rulesets.Mania.Difficulty
@@ -35,7 +36,7 @@ namespace osu.Game.Rulesets.Mania.Difficulty
             originalOverallDifficulty = beatmap.BeatmapInfo.BaseDifficulty.OverallDifficulty;
         }
 
-        protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate)
+        protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, PerNoteStrainSkill[] preloadedSkills, Skill[] skills, double clockRate)
         {
             if (beatmap.HitObjects.Count == 0)
                 return new ManiaDifficultyAttributes { Mods = mods, Skills = skills };
@@ -65,12 +66,22 @@ namespace osu.Game.Rulesets.Mania.Difficulty
                 yield return new ManiaDifficultyHitObject(sortedObjects[i], sortedObjects[i - 1], clockRate);
         }
 
+        protected override void ProcessPerNoteStrainSkill(PerNoteStrainSkill[] preloadedStrainSkills)
+        {
+
+        }
+
         // Sorting is done in CreateDifficultyHitObjects, since the full list of hitobjects is required.
         protected override IEnumerable<DifficultyHitObject> SortObjects(IEnumerable<DifficultyHitObject> input) => input;
 
         protected override Skill[] CreateSkills(IBeatmap beatmap, Mod[] mods, double clockRate) => new Skill[]
         {
             new Strain(mods, ((ManiaBeatmap)beatmap).TotalColumns)
+        };
+
+        protected override PerNoteStrainSkill[] GetPreLoadedSkills(IBeatmap beatmap, Mod[] mods, double clockRate) => new PerNoteStrainSkill[]
+        {
+
         };
 
         protected override Mod[] DifficultyAdjustmentMods

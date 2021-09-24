@@ -28,7 +28,7 @@ namespace osu.Game.Rulesets.Difficulty.Skills
         /// </summary>
         protected IReadOnlyList<Mod> Mods => mods;
 
-        private readonly Mod[] mods;
+        protected readonly Mod[] mods;
 
         protected Skill(Mod[] mods)
         {
@@ -36,7 +36,7 @@ namespace osu.Game.Rulesets.Difficulty.Skills
             Previous = new ReverseQueue<DifficultyHitObject>(HistoryLength + 1);
         }
 
-        internal void ProcessInternal(DifficultyHitObject current)
+        public void ProcessInternal(DifficultyHitObject current)
         {
             while (Previous.Count > HistoryLength)
                 Previous.Dequeue();
