@@ -35,6 +35,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             if (beatmap.HitObjects.Count == 0)
                 return new OsuDifficultyAttributes { Mods = mods, Skills = skills };
 
+            double aimRatingRelax = Math.Sqrt(skills[0].DifficultyValue()) * difficulty_multiplier;
             double aimRating = Math.Sqrt(skills[1].DifficultyValue()) * difficulty_multiplier;
             double speedRating = Math.Sqrt(skills[2].DifficultyValue()) * difficulty_multiplier;
             double starRating = aimRating + speedRating + Math.Abs(aimRating - speedRating) / 2;
@@ -45,7 +46,6 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             double strainAverage = ((OsuStrainSkill)skills[1]).DifficultyValueAverage();
             double strainMost = skills[1].DifficultyValue();
 
-            double aimRatingRelax = Math.Sqrt(skills[0].DifficultyValue()) * difficulty_multiplier;
 
             //Console.WriteLine(skills[4].DifficultyValue());
 
