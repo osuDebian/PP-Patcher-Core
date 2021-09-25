@@ -57,10 +57,10 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             double jumpDistanceExp = applyDiminishingExp(osuCurrent.JumpDistance);
             double travelDistanceExp = applyDiminishingExp(osuCurrent.TravelDistance);
 
-            double ScaleBonusDeltaTime = 1 + (osuCurrent.ScalingFactor - 1) * 0.05;
+            double ScaleBonusDeltaTime = 1 + (osuCurrent.ScalingFactor - 1) * 0.5;
             //Console.WriteLine(index);
             double angleBonus = database.strainsNoteAngle[index] * 0.1;
-            double fingerControlBonus = database.strainsFingerControl[index] * 0.03; // 릴렉스라서 값이 작음
+            double fingerControlBonus = database.strainsFingerControl[index] * 0.02; // 릴렉스라서 값이 작음
             double sliderVelocityBonus = database.strainsSliderVelocity[index] * 0.12;
 
             double totalBonus = 1 + angleBonus + fingerControlBonus + sliderVelocityBonus;
