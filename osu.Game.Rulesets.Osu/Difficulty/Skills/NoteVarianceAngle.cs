@@ -47,8 +47,9 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             if (deltaTimeToBpm >= 120)
             {
                 // 스택된 예각 연타 너프
-                var cs = 54.4 - 4.48 * ((OsuHitObject)osuCurrent.BaseObject).Radius;
-                var distance = osuCurrent.JumpDistance / (cs * 2);
+                var radius = ((OsuHitObject)osuCurrent.BaseObject).Radius;
+                //var cs = 54.4 - 4.48 * radius;
+                var distance = osuCurrent.JumpDistance / (radius * 2);
                 var multiplier = distance >= 1.0 ? 1.0 : Math.Max(distance, 0);
 
                 // 200bpm까지 유효
