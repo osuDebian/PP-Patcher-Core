@@ -206,7 +206,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             //Console.WriteLine("lengthBonusRate: " + StreamFirst + ", " + JumpRate + ", " + (180 + (180.0) * (JumpRate - 0.3) * (1 / 0.4)));
             //if (JumpRate <= 0.3) StreamNerfRateLength = 0;
             //if (JumpRate >= 0.7) StreamNerfRateLength = 1;
-            double StreamNerfRateLength = Math.Max(1 - StreamFirst, 0);
+            double StreamNerfRateLength = Math.Max(1 - StreamFirst * 1.5, 0);
 
             //Console.WriteLine(Attributes.HitCircleCount + ", "
             //    + totalHits + ", "
@@ -214,7 +214,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             //    + StreamNerfRateLength);
 
 
-            double lengthBonus = 0.95 + 0.4 * Math.Min(2.0, totalHits / 2000.0) * StreamNerfRateLength;
+            double lengthBonus = 0.95 + 0.6 * Math.Min(2.0, totalHits / 2000.0) * StreamNerfRateLength;
             //Console.WriteLine(lengthBonus + ", " + JumpRate);
             aimValue *= lengthBonus;
 

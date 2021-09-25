@@ -76,22 +76,22 @@ namespace osu.Desktop
                     new OsuModHidden(),
                     new OsuModHardRock(),
                 }, 1),
-                new CalculateData("dtezrx", new Mod[] {
-                    new OsuModRelax(),
-                    new OsuModHidden(),
-                    new OsuModDoubleTime(),
-                    new OsuModEasy(),
-                }, 1),
+                //new CalculateData("dtezrx", new Mod[] {
+                //    new OsuModRelax(),
+                //    new OsuModHidden(),
+                //    new OsuModDoubleTime(),
+                //    new OsuModEasy(),
+                //}, 1),
                 new CalculateData("dthdrx", new Mod[] {
                     new OsuModRelax(),
                     new OsuModHidden(),
                     new OsuModDoubleTime(),
                 }, 1),
-                new CalculateData("dtrx", new Mod[] {
-                    new OsuModRelax(),
-                    //new OsuModHidden(),
-                    new OsuModDoubleTime(),
-                }, 1),
+                //new CalculateData("dtrx", new Mod[] {
+                //    new OsuModRelax(),
+                //    //new OsuModHidden(),
+                //    new OsuModDoubleTime(),
+                //}, 1),
                 //new CalculateData("dthdrx97", new Mod[] {
                 //    new OsuModRelax(),
                 //    new OsuModHidden(),
@@ -103,12 +103,12 @@ namespace osu.Desktop
                     new OsuModHidden(),
                     new OsuModHardRock(),
                 }, 1),
-                new CalculateData("dthdhrrx97", new Mod[] {
-                    new OsuModRelax(),
-                    new OsuModDoubleTime(),
-                    new OsuModHidden(),
-                    new OsuModHardRock(),
-                }, 0.97),
+                //new CalculateData("dthdhrrx97", new Mod[] {
+                //    new OsuModRelax(),
+                //    new OsuModDoubleTime(),
+                //    new OsuModHidden(),
+                //    new OsuModHardRock(),
+                //}, 0.97),
                 //new CalculateData("dthdhrrx97", new Mod[] {
                 //    new OsuModRelax(),
                 //    new OsuModDoubleTime(),

@@ -60,7 +60,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Preprocessing
             // We will scale distances by this factor, so we can assume a uniform CircleSize among beatmaps.
             // 그런데 기존 버프로는 부족하고, 거듭제곱을 이용하여 두 값을 늘려주면 작은 cs에 대해 훨씬 큰 버프를 추가 코드 없이 먹일 수 있다.
             // 이로서 radius가 작을때 smallCircleBonus같은걸 안해도 안정적으로 버프할 수 있다.
-            ScalingFactor = (float)(Math.Pow(normalized_radius, 1.5) / Math.Pow((float)BaseObject.Radius, 1.5));
+            ScalingFactor = (float)(Math.Pow(normalized_radius, 2) / Math.Pow((float)BaseObject.Radius, 2));
             //float cs = (54.4f - (float)BaseObject.Radius) / 4.48f;
             //float scalingFactor = (float) Math.Pow(cs, 2) / 60f;
             // cs 5.2는 약 31
