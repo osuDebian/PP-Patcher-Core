@@ -206,7 +206,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             //Console.WriteLine("lengthBonusRate: " + StreamFirst + ", " + JumpRate + ", " + (180 + (180.0) * (JumpRate - 0.3) * (1 / 0.4)));
             //if (JumpRate <= 0.3) StreamNerfRateLength = 0;
             //if (JumpRate >= 0.7) StreamNerfRateLength = 1;
-            double StreamNerfRateLength = Math.Max(1 - StreamFirst * 2, 0);
+            double StreamNerfRateLength = Math.Max(1 - StreamFirst * 1, 0);
 
             //Console.WriteLine(Attributes.HitCircleCount + ", "
             //    + totalHits + ", "
@@ -214,7 +214,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             //    + StreamNerfRateLength);
 
 
-            double lengthBonus = 0.95 + 0.6 * Math.Min(2.0, totalHits / 2000.0) * StreamNerfRateLength;
+            double lengthBonus = 0.95 + 0.5 * Math.Min(2.0, totalHits / 2000.0) * StreamNerfRateLength;
             //Console.WriteLine(lengthBonus + ", " + JumpRate);
             aimValue *= lengthBonus;
 
@@ -222,7 +222,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             //if (countMiss > 0)
             //    aimValue *= 0.97 * Math.Pow(1 - Math.Pow((double)countMiss / totalHits, 0.775), countMiss);
             if (countMiss > 0)
-                aimValue *= Math.Pow(0.96, countMiss);
+                aimValue *= Math.Pow(0.95, countMiss);
             
             // Combo scaling
             if (Attributes.MaxCombo > 0)
@@ -412,7 +412,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             double JumpRate = (Attributes.DistanceAverage / Attributes.DistanceTop);
             double StreamThresholdLength = 0.7;
             double StreamFirstLength = Math.Max((StreamThresholdLength - JumpRate), 0);
-            double StreamNerfRateLength = Math.Max(1 - StreamFirstLength * 1, 0.05);
+            double StreamNerfRateLength = Math.Max(1 - StreamFirstLength * 1.5, 0.05);
             //Console.WriteLine(StreamNerfRateLength);
             //Console.WriteLine(Math.Min(1.15, Math.Pow(amountHitObjectsWithAccuracy / 2000.0 * StreamNerfRateLength, 0.3)));
             accuracyValue *= Math.Min(1.15, Math.Pow(amountHitObjectsWithAccuracy / 1000.0 * StreamNerfRateLength, 0.3));

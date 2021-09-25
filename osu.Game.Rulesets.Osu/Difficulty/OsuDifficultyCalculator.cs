@@ -11,6 +11,7 @@ using osu.Game.Rulesets.Difficulty.Skills;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Osu.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Osu.Difficulty.Skills;
+using osu.Game.Rulesets.Osu.Difficulty.Skills.Pre;
 using osu.Game.Rulesets.Osu.Mods;
 using osu.Game.Rulesets.Osu.Objects;
 using osu.Game.Rulesets.Osu.Scoring;
@@ -102,6 +103,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             new NoteVarianceAngle(beatmap, mods, clockRate),
             new NoteVarianceFingerControl(beatmap, mods, clockRate),
             new NoteVarianceSliderVelocity(beatmap, mods, clockRate),
+            new AverageTiming(beatmap, mods, clockRate),
         };
 
         protected override Skill[] CreateSkills(IBeatmap beatmap, Mod[] mods, double clockRate) => new Skill[]
@@ -121,6 +123,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             database.strainsNoteAngle = preloadedStrainSkills[0].GetAllStrainPeaks();
             database.strainsFingerControl = preloadedStrainSkills[1].GetAllStrainPeaks();
             database.strainsSliderVelocity = preloadedStrainSkills[2].GetAllStrainPeaks();
+            database.averageDeltaTime = preloadedStrainSkills[3].DifficultyValue();
+            //Console.WriteLine(database.averageDeltaTime);
         }
 
         protected override Mod[] DifficultyAdjustmentMods => new Mod[]
