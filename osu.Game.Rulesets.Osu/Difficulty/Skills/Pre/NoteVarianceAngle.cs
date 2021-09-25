@@ -17,7 +17,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
     {
         protected override double SkillMultiplier => 1;
 
-        protected override double StrainDecayBase => 0.3;
+        protected override double StrainDecayBase => 0.4;
         public NoteVarianceAngle(IBeatmap beatmap, Mod[] mods, double clockRate) : base(beatmap, mods, clockRate)
         {
 
@@ -38,10 +38,10 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             var angle = osuCurrent.Angle ?? 0;
 
             // 각도 변화 값
-            var value = Math.Sin(Math.Abs(angle - lastAngle) / 2);
+            var value = Math.Sin(Math.Max(Math.Abs(angle - lastAngle) - Math.PI / 2, 0));
 
             // 120bpm 미만은 둔각일때 보너스
-            value += Math.Sin(angle / 2) / 10;
+            value += Math.Sin(Math.Max(angle - Math.PI, 0)) / 5;
 
             // 120bpm 이상은 예각일때 보너스 제공
             if (deltaTimeToBpm >= 120)
