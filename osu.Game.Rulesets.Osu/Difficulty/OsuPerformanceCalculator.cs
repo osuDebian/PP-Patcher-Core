@@ -307,8 +307,13 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             double aimValue = Math.Pow(5.0 * Math.Max(1.0, rawAim / 0.0675) - 4.0, 3.0) / 100000.0;
 
             // Longer maps are worth more
-            double lengthBonus = 0.95 + 0.4 * Math.Min(1.0, totalHits / 2000.0) +
-                                 (totalHits > 2000 ? Math.Log10(totalHits / 2000.0) * 0.5 : 0.0);
+            //double lengthBonus = 0.95 + 0.4 * Math.Min(1.0, totalHits / 2000.0) +
+            //                     (totalHits > 2000 ? Math.Log10(totalHits / 2000.0) * 0.5 : 0.0);
+            double lengthBonus = 0.95
+                        + 0.05 * Math.Min(1.0, totalHits / 500)
+                        + 0.2 * Math.Max(Math.Min(1.0, (totalHits - 500) / 500), 0)
+                        + 0.4 * Math.Max(Math.Min(2.0, (totalHits - 1000) / 2000.0), 0);
+            ;
 
 
             aimValue *= lengthBonus;
@@ -321,19 +326,19 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             if (Attributes.MaxCombo > 0)
                 aimValue *= Math.Min(Math.Pow(scoreMaxCombo, 0.8) / Math.Pow(Attributes.MaxCombo, 0.8), 1.0);
 
-            double approachRateFactor = 0.0;
-            if (Attributes.ApproachRate > 10.33)
-                approachRateFactor = Attributes.ApproachRate - 10.33;
-            else if (Attributes.ApproachRate < 8.0)
-                approachRateFactor = 0.025 * (8.0 - Attributes.ApproachRate);
+            //double approachRateFactor = 0.0;
+            //if (Attributes.ApproachRate > 10.33)
+            //    approachRateFactor = Attributes.ApproachRate - 10.33;
+            //else if (Attributes.ApproachRate < 8.0)
+            //    approachRateFactor = 0.025 * (8.0 - Attributes.ApproachRate);
 
-            double approachRateTotalHitsFactor = 1.0 / (1.0 + Math.Exp(-(0.007 * (totalHits - 400))));
+            //double approachRateTotalHitsFactor = 1.0 / (1.0 + Math.Exp(-(0.007 * (totalHits - 400))));
 
-            double approachRateBonus = 1.0 + (0.03 + 0.37 * approachRateTotalHitsFactor) * approachRateFactor;
+            //double approachRateBonus = 1.0 + (0.03 + 0.37 * approachRateTotalHitsFactor) * approachRateFactor;
 
             // We want to give more reward for lower AR when it comes to aim and HD. This nerfs high AR and buffs lower AR.
-            if (mods.Any(h => h is OsuModHidden))
-                aimValue *= 1.0 + 0.04 * (12.0 - Attributes.ApproachRate);
+            //if (mods.Any(h => h is OsuModHidden))
+            //    aimValue *= 1.0 + 0.04 * (12.0 - Attributes.ApproachRate);
 
             double flashlightBonus = 1.0;
 
@@ -347,7 +352,22 @@ namespace osu.Game.Rulesets.Osu.Difficulty
                                       : 0.0);
             }
 
-            aimValue *= Math.Max(flashlightBonus, approachRateBonus);
+            aimValue *= flashlightBonus;
+
+            // low AR buff
+            // 이지 유저 보완 코드.
+            // AR이 낮으면 낮을수록 아주 크게 버프받는다. AR 4까지 보장
+            // aimValue *= log(10 + (12 - AR)^(2.5)) / 2
+            // hidden multiplier 1.8
+            double lowarBonus = Math.Log10(9
+                + Math.Pow(Math.Min(12 - Attributes.ApproachRate, 8), 1.5) * 2 // 42.22
+                * (mods.Any(h => h is OsuModHidden) ? 1.5 : 1));
+            //Console.WriteLine(lowarBonus);
+            aimValue *= lowarBonus;
+
+            
+
+            //aimValue *= Math.Max(flashlightBonus, approachRateBonus);
 
             // Scale the aim value with accuracy _slightly_
             aimValue *= 0.5 + accuracy / 2.0;
