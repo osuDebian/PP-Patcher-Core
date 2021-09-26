@@ -214,8 +214,13 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             //    + StreamNerfRateLength);
 
 
-            double lengthBonus = 0.95 + 0.5 * Math.Min(2.0, totalHits / 2000.0) * StreamNerfRateLength;
+            double lengthBonus = 0.95
+                                    + 0.05 * Math.Min(1.0, totalHits / 500) * StreamNerfRateLength
+                                    + 0.2 * Math.Max(Math.Min(1.0, (totalHits - 500) / 500), 0) * StreamNerfRateLength
+                                    + 0.8 * Math.Max(Math.Min(2.0, (totalHits - 1000) / 2000.0), 0) * StreamNerfRateLength;
+                                    ;
             //Console.WriteLine(lengthBonus + ", " + JumpRate);
+            //Console.WriteLine(lengthBonus);
             aimValue *= lengthBonus;
 
             // Penalize misses by assessing # of misses relative to the total # of objects. Default a 3% reduction for any # of misses.
@@ -412,7 +417,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             double JumpRate = (Attributes.DistanceAverage / Attributes.DistanceTop);
             double StreamThresholdLength = 0.7;
             double StreamFirstLength = Math.Max((StreamThresholdLength - JumpRate), 0);
-            double StreamNerfRateLength = Math.Max(1 - StreamFirstLength * 1.5, 0.05);
+            double StreamNerfRateLength = Math.Max(1 - StreamFirstLength * 0.5, 0.05);
             //Console.WriteLine(StreamNerfRateLength);
             //Console.WriteLine(Math.Min(1.15, Math.Pow(amountHitObjectsWithAccuracy / 2000.0 * StreamNerfRateLength, 0.3)));
             accuracyValue *= Math.Min(1.15, Math.Pow(amountHitObjectsWithAccuracy / 1000.0 * StreamNerfRateLength, 0.3));
