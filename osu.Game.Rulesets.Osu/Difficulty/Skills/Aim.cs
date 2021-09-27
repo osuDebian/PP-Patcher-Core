@@ -97,17 +97,18 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             //return calculateForJump(result, jumpDistanceExp, travelDistanceExp, osuCurrent.StrainTime);
             return
                 totalBonus *
-                (calculateForJump(0, jumpDistanceExp * ScaleBonusDeltaTime, travelDistanceExp * ScaleBonusDeltaTime, osuCurrent.StrainTime) * 0.5 +
-                calculateForJump(0, jumpDistanceExp * osuCurrent.ScalingFactor, travelDistanceExp * osuCurrent.ScalingFactor, 320));
+                (calculateForJump(jumpDistanceExp * ScaleBonusDeltaTime, travelDistanceExp * ScaleBonusDeltaTime, osuCurrent.StrainTime) * 0.5 +
+                calculateForJump(jumpDistanceExp * osuCurrent.ScalingFactor, travelDistanceExp * osuCurrent.ScalingFactor, 320));
         }
 
-        private double calculateForJump(double result, double jumpDistanceExp, double travelDistanceExp, double strainTime)
+        private double calculateForJump(double jumpDistanceExp, double travelDistanceExp, double strainTime)
         {
-            return Math.Max(
-                result + (jumpDistanceExp + travelDistanceExp + Math.Sqrt(travelDistanceExp * jumpDistanceExp)) / Math.Max(strainTime, timing_threshold),
-                0
-                //(Math.Sqrt(travelDistanceExp * jumpDistanceExp) + jumpDistanceExp + travelDistanceExp) / strainTime
-            );
+            return
+            //Math.Max(
+                (jumpDistanceExp + travelDistanceExp + Math.Sqrt(travelDistanceExp * jumpDistanceExp)) / Math.Max(strainTime, timing_threshold),
+            //    (jumpDistanceExp + travelDistanceExp + Math.Sqrt(travelDistanceExp * jumpDistanceExp)) / strainTime
+            //)
+            ;
         }
 
         private double applyDiminishingExp(double val) => Math.Pow(val, 0.99);
