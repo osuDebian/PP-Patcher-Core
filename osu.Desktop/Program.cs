@@ -60,8 +60,8 @@ namespace osu.Desktop
 
             var list = new List<CalculateData>
             {
-                new CalculateData("", new Mod[] {
-                    //new OsuModRelax(),
+                new CalculateData("rx", new Mod[] {
+                    new OsuModRelax(),
                     //new OsuModHidden(),
                     //new OsuModDoubleTime(),
                 }, 1),
@@ -71,8 +71,8 @@ namespace osu.Desktop
                 //    //new OsuModHidden(),
                 //    //new OsuModDoubleTime(),
                 //}, 1),
-                new CalculateData("hdhr", new Mod[] {
-                    //new OsuModRelax(),
+                new CalculateData("hdhrrx", new Mod[] {
+                    new OsuModRelax(),
                     new OsuModHidden(),
                     new OsuModHardRock(),
                 }, 1),
@@ -82,8 +82,8 @@ namespace osu.Desktop
                 //    new OsuModDoubleTime(),
                 //    new OsuModEasy(),
                 //}, 1),
-                new CalculateData("dthd", new Mod[] {
-                    //new OsuModRelax(),
+                new CalculateData("dthdrx", new Mod[] {
+                    new OsuModRelax(),
                     new OsuModHidden(),
                     new OsuModDoubleTime(),
                 }, 1),
@@ -97,8 +97,8 @@ namespace osu.Desktop
                 //    new OsuModHidden(),
                 //    new OsuModDoubleTime(),
                 //}, 0.97),
-                new CalculateData("dthdhr", new Mod[] {
-                    //new OsuModRelax(),
+                new CalculateData("dthdhrrx", new Mod[] {
+                    new OsuModRelax(),
                     new OsuModDoubleTime(),
                     new OsuModHidden(),
                     new OsuModHardRock(),
