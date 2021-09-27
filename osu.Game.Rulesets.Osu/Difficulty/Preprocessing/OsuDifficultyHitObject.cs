@@ -67,7 +67,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Preprocessing
             // cs 6.5는 약 25
             if (BaseObject.Radius < 35)
             {
-                float smallCircleBonus = Math.Max(35 - (float)BaseObject.Radius, 0) / 50;
+                float smallCircleBonus = Math.Max(35 - (float)BaseObject.Radius, 0) / 20;
                 //if(smallCircleBonus > 0.01F)
                 //Console.WriteLine(smallCircleBonus);
                 ScalingFactor *= 1 + smallCircleBonus;
