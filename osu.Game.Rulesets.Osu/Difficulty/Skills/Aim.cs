@@ -105,7 +105,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
         {
             return
             //Math.Max(
-                (jumpDistanceExp + travelDistanceExp + Math.Sqrt(travelDistanceExp * jumpDistanceExp)) / Math.Max(strainTime, timing_threshold),
+                (jumpDistanceExp + travelDistanceExp + Math.Sqrt(travelDistanceExp * jumpDistanceExp)) / Math.Max(strainTime, timing_threshold)
+            //    ,
             //    (jumpDistanceExp + travelDistanceExp + Math.Sqrt(travelDistanceExp * jumpDistanceExp)) / strainTime
             //)
             ;
