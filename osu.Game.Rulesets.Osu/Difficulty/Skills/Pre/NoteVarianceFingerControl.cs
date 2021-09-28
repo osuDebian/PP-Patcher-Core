@@ -24,6 +24,11 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             // bpm이 200일때 1로 처리
             // 즉 bpm이 200이라면 무조건 이사람은 양타할걸로 보는것이다.
             // 200브픔을 단타로 치는 사람은 극히 드물거고 그정도면 개잘하는것
+
+            // calculates the percentage of alternative.
+            // when bpm is 120, it gives 0.
+            // when bpm is 200, 1.
+            // as a result, when bpm is 200, we consider the note has 100% of percentage of alternative
             var deltaTimeToBpm = 15000 / current.DeltaTime;
             var probablityAlternative = Math.Max((deltaTimeToBpm - 120.0), 0) / (200.0 - 120.0);
 

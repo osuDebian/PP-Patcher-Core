@@ -12,13 +12,13 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
     /// <summary>
     /// Represents the skill required to correctly aim at every object in the map with a uniform CircleSize and normalized distances.
     /// </summary>
-    public class Aim : OsuStrainSkill
+    public class AimRelax : OsuStrainSkill
     {
         private const double angle_bonus_begin = Math.PI / 3;
         private const double timing_threshold = 107;
 
         private OsuPerNoteDatabase database;
-        public Aim(OsuPerNoteDatabase database, Mod[] mods)
+        public AimRelax(OsuPerNoteDatabase database, Mod[] mods)
             : base(mods)
         {
             this.database = database;
@@ -79,7 +79,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             double fingerControlBonus = database.strainsFingerControl[index] * 0.04;
 
             // 슬라이더 속도 보너스
-            double sliderVelocityBonus = database.strainsSliderVelocity[index] * 0.12;
+            double sliderVelocityBonus = database.strainsSliderVelocity[index] * 0.075;
             index++;
 
             double totalBonus = Math.Pow(

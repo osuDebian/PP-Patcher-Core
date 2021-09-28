@@ -59,18 +59,25 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
 
             // 하드락은 기본적으로 디스턴스가 넓은 곳에서 강하게 작용한다
             // 그렇지만 어느정도 DT와의 시너지 효과를 주기 위해 약간의 보너스를 넣어준다
+            // HardRock basically works strongly in a wide distance.
+            // However, some bonus is added to give some synergy with DT.
             double ScaleBonusDeltaTime = 1 + (osuCurrent.ScalingFactor - 1) * 0.5;
-            //Console.WriteLine(index);
 
             // 타이밍 보너스
+            // 평균과 차이가 많이 나는 노트에 대해 보너스를 부여한다.
+            // Timing Bonus
+            // The bonus is given for notes that deviate significantly from the average.
             double timingHalf = Math.Abs(database.averageDeltaTime / 2 - osuCurrent.DeltaTime) / (database.averageDeltaTime / 2);
             double timingNormal = Math.Abs(database.averageDeltaTime - osuCurrent.DeltaTime) / (database.averageDeltaTime);
             double timingDouble = Math.Abs(database.averageDeltaTime * 2 - osuCurrent.DeltaTime) / (database.averageDeltaTime * 2);
 
-            double timingVarianceBonus = Math.Min(timingHalf, Math.Min(timingNormal, timingDouble)) * 0.15;
+            double timingVarianceBonus = Math.Min(timingHalf, Math.Min(timingNormal, timingDouble)) * 0.01;
 
-            /* 각 노트별 보너스를 가져와 가중치를 곱한다 */
-            // 앵글 보너스
+            /* 각 노트별 보너스를 가져와 가중치를 곱한다 
+             * it takes the bonus for each note and multiply by the weight
+             */
+            // 앵글 변화 보너스
+            // angle variance bonus
             double angleBonus = database.strainsNoteAngle[index] * 0.13;
 
             // 핑거 컨트롤 보너스
@@ -79,7 +86,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             double fingerControlBonus = database.strainsFingerControl[index] * 0.065;
 
             // 슬라이더 속도 보너스
-            double sliderVelocityBonus = database.strainsSliderVelocity[index] * 0.13;
+            double sliderVelocityBonus = database.strainsSliderVelocity[index] * 0.075;
             index++;
 
             double totalBonus = Math.Pow(

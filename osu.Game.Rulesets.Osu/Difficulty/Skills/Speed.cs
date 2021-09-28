@@ -29,6 +29,9 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
         private const double max_speed_bonus = 45; // ~330BPM
         private const double speed_balancing_factor = 40;
 
+        private const double min_doubletap_nerf = 0.3; // minimum speedBonus value (eventually on stacked)
+        private const double max_doubletap_nerf = 1.0; // maximum speedBonus value 
+        private const double threshold_fully_contributing = 0.65; // minimum distance not influenced
         public Speed(Mod[] mods)
             : base(mods)
         {
@@ -44,9 +47,24 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             double distance = Math.Min(single_spacing_threshold, osuCurrent.TravelDistance + osuCurrent.JumpDistance);
             double deltaTime = Math.Max(max_speed_bonus, current.DeltaTime);
 
+            double radius = ((OsuHitObject)osuCurrent.BaseObject).Radius;
+
+            /*  a basecode to nerf acute high bpm stream and doubletap. 
+             *  because no one could do doubletap on spaced streams.
+             *  finally it is multiplied on speedBonus. 
+             *
+             *  but this code make some speed players discourage.
+             *  it makes hidamari no uta be taken about 150pp.
+             *  and other stream maps be taken about 0-5pp in average. */
+            double multiplierForSpeedBonus = min_doubletap_nerf +
+                Math.Min(Math.Max(distance / (radius * threshold_fully_contributing), 1.0), 0.0)
+                * (max_doubletap_nerf - min_doubletap_nerf)
+                ;
+
             double speedBonus = 1.0;
             if (deltaTime < min_speed_bonus)
-                speedBonus = 1 + Math.Pow((min_speed_bonus - deltaTime) / speed_balancing_factor, 2);
+                speedBonus = 1 + Math.Pow((min_speed_bonus - deltaTime) / speed_balancing_factor, 2)
+                                    * multiplierForSpeedBonus;
 
             double angleBonus = 1.0;
 
@@ -64,7 +82,12 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
                 }
             }
 
-            return (1 + (speedBonus - 1) * 0.75) * angleBonus * (0.95 + speedBonus * Math.Pow(distance / single_spacing_threshold, 3.5)) / osuCurrent.StrainTime;
+            
+
+
+            return (1 + (speedBonus - 1) * 0.75) * angleBonus * (0.95 + speedBonus * Math.Pow(distance / single_spacing_threshold, 3.5)) / osuCurrent.StrainTime
+                //* multiplier
+                ;
         }
     }
 }

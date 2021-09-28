@@ -108,7 +108,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
 
         protected override Skill[] CreateSkills(IBeatmap beatmap, Mod[] mods, double clockRate) => new Skill[]
         {
-            new Aim(database, mods),
+            new AimRelax(database, mods),
             new AimStandard(database, mods),
             new Speed(mods),
             new DistanceAverage(mods),

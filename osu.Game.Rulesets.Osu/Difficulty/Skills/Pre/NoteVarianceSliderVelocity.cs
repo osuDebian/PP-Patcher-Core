@@ -26,7 +26,9 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             var osuCurrent = (OsuDifficultyHitObject)current;
             var result = 0.0;
 
-            if(osuCurrent.LastObject is Slider OsuSlider)
+            // 슬라이더 속도가 급변할 시 보너스를 준다.
+            // The Bonus is given when the slider speed changes rapidly.
+            if (osuCurrent.LastObject is Slider OsuSlider)
             {
                 if(lastVelocity >= 0)
                 {
@@ -34,6 +36,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
                 }
                 lastVelocity = OsuSlider.Velocity;
 
+                // default bonus for velocity
                 result += OsuSlider.Velocity / 10;
             }
 

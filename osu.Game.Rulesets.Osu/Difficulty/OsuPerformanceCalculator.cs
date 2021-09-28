@@ -217,7 +217,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             double lengthBonus = 0.95
                                     + 0.05 * Math.Min(1.0, totalHits / 500) * StreamNerfRateLength
                                     + 0.2 * Math.Max(Math.Min(1.0, (totalHits - 500) / 500), 0) * StreamNerfRateLength
-                                    + 0.8 * Math.Max(Math.Min(2.0, (totalHits - 1000) / 2000.0), 0) * StreamNerfRateLength;
+                                    + 0.8 * Math.Max(Math.Min(1.0, (totalHits - 1000) / 2000.0), 0) * StreamNerfRateLength;
                                     ;
             //Console.WriteLine(lengthBonus + ", " + JumpRate);
             //Console.WriteLine(lengthBonus);
@@ -307,13 +307,13 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             double aimValue = Math.Pow(5.0 * Math.Max(1.0, rawAim / 0.0675) - 4.0, 3.0) / 100000.0;
 
             // Longer maps are worth more
-            //double lengthBonus = 0.95 + 0.4 * Math.Min(1.0, totalHits / 2000.0) +
-            //                     (totalHits > 2000 ? Math.Log10(totalHits / 2000.0) * 0.5 : 0.0);
-            double lengthBonus = 0.95
-                        + 0.05 * Math.Min(1.0, totalHits / 500)
-                        + 0.2 * Math.Max(Math.Min(1.0, (totalHits - 500) / 500), 0)
-                        + 0.4 * Math.Max(Math.Min(2.0, (totalHits - 1000) / 2000.0), 0);
-            ;
+            double lengthBonus = 0.95 + 0.4 * Math.Min(1.0, totalHits / 2000.0) +
+                                 (totalHits > 2000 ? Math.Log10(totalHits / 2000.0) * 0.5 : 0.0);
+            //double lengthBonus = 0.95
+            //            + 0.05 * Math.Min(1.0, totalHits / 500)
+            //            + 0.2 * Math.Max(Math.Min(1.0, (totalHits - 500) / 500), 0)
+            //            + 0.4 * Math.Max(Math.Min(1.0, (totalHits - 1000) / 2000.0), 0);
+            //;
 
 
             aimValue *= lengthBonus;
