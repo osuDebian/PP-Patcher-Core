@@ -65,6 +65,11 @@ namespace osu.Desktop
                     //new OsuModHidden(),
                     //new OsuModDoubleTime(),
                 }, 1),
+                new CalculateData("rx", new Mod[] {
+                    new OsuModRelax(),
+                    //new OsuModHidden(),
+                    //new OsuModDoubleTime(),
+                }, 1),
                 //new CalculateData("ezrx", new Mod[] {
                 //    new OsuModRelax(),
                 //    new OsuModEasy(),
@@ -76,6 +81,11 @@ namespace osu.Desktop
                     new OsuModHidden(),
                     new OsuModHardRock(),
                 }, 1),
+                new CalculateData("hdhrrx", new Mod[] {
+                    new OsuModRelax(),
+                    new OsuModHidden(),
+                    new OsuModHardRock(),
+                }, 1),
                 //new CalculateData("dtezrx", new Mod[] {
                 //    new OsuModRelax(),
                 //    new OsuModHidden(),
@@ -84,6 +94,11 @@ namespace osu.Desktop
                 //}, 1),
                 new CalculateData("dthd", new Mod[] {
                     //new OsuModRelax(),
+                    new OsuModHidden(),
+                    new OsuModDoubleTime(),
+                }, 1),
+                new CalculateData("dthdrx", new Mod[] {
+                    new OsuModRelax(),
                     new OsuModHidden(),
                     new OsuModDoubleTime(),
                 }, 1),
