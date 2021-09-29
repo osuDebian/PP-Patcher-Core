@@ -77,27 +77,27 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills.Pre
 
             if (osuCurrent.Angle != null && osuCurrent.Angle.Value < angle_bonus_begin)
             {
-                angleBonus = 1 + Math.Pow(Math.Sin(1.5 * (angle_bonus_begin - osuCurrent.Angle.Value)), 2) / 3.57;
+                //angleBonus = 1 + Math.Pow(Math.Sin(1.5 * (angle_bonus_begin - osuCurrent.Angle.Value)), 2) / 3.57;
 
-                if (osuCurrent.Angle.Value < pi_over_2)
-                {
-                    // nerf anglebonus on stacked acute stream spam
+                //if (osuCurrent.Angle.Value < pi_over_2)
+                //{
+                //    // nerf anglebonus on stacked acute stream spam
 
-                    double multiplierAngleBonus = min_acute_stream_spam_nerf +
-                        Math.Max(Math.Min(distance / (radius * threshold_acute_stream_spam_contributing), 1.0), 0.0)
-                        * (max_acute_stream_spam_nerf - min_acute_stream_spam_nerf)
-                        ;
+                //    double multiplierAngleBonus = min_acute_stream_spam_nerf +
+                //        Math.Max(Math.Min(distance / (radius * threshold_acute_stream_spam_contributing), 1.0), 0.0)
+                //        * (max_acute_stream_spam_nerf - min_acute_stream_spam_nerf)
+                //        ;
 
-                    if (distance < 90)
-                        if (osuCurrent.Angle.Value < pi_over_4)
-                            angleBonus = (1.28 + (1 - 1.28) * Math.Min((90 - distance) / 10, 1)) * multiplierAngleBonus;
-                        else
-                            angleBonus = (1.28 + (1 - 1.28) * Math.Min((90 - distance) / 10, 1)
-                            * Math.Sin((pi_over_2 - osuCurrent.Angle.Value) / pi_over_4)) * multiplierAngleBonus;
-                    else
-                        angleBonus = 1.28;
-                    //angleBonus *= 1.5;
-                }
+                //    if (distance < 90)
+                //        if (osuCurrent.Angle.Value < pi_over_4)
+                //            angleBonus = (1.28 + (1 - 1.28) * Math.Min((90 - distance) / 10, 1)) * multiplierAngleBonus;
+                //        else
+                //            angleBonus = (1.28 + (1 - 1.28) * Math.Min((90 - distance) / 10, 1)
+                //            * Math.Sin((pi_over_2 - osuCurrent.Angle.Value) / pi_over_4)) * multiplierAngleBonus;
+                //    else
+                //        angleBonus = 1.28;
+                //    //angleBonus *= 1.5;
+                //}
             }
 
 
