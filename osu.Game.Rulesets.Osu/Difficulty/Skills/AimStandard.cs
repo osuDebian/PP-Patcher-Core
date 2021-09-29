@@ -61,7 +61,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             // 그렇지만 어느정도 DT와의 시너지 효과를 주기 위해 약간의 보너스를 넣어준다
             // HardRock basically works strongly in a wide distance.
             // However, some bonus is added to give some synergy with DT.
-            double ScaleBonusDeltaTime = 1 + (osuCurrent.ScalingFactor - 1) * 0.5;
+            double ScaleBonusDeltaTime = 1 + (osuCurrent.ScalingFactor - 1) * 0.75;
 
             // 타이밍 보너스
             // 평균과 차이가 많이 나는 노트에 대해 보너스를 부여한다.
@@ -71,14 +71,14 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             double timingNormal = Math.Abs(database.averageDeltaTime - osuCurrent.DeltaTime) / (database.averageDeltaTime);
             double timingDouble = Math.Abs(database.averageDeltaTime * 2 - osuCurrent.DeltaTime) / (database.averageDeltaTime * 2);
 
-            double timingVarianceBonus = Math.Min(timingHalf, Math.Min(timingNormal, timingDouble)) * 0.01;
+            double timingVarianceBonus = Math.Min(timingHalf, Math.Min(timingNormal, timingDouble)) * 0.05;
 
             /* 각 노트별 보너스를 가져와 가중치를 곱한다 
              * it takes the bonus for each note and multiply by the weight
              */
             // 앵글 변화 보너스
             // angle variance bonus
-            double angleBonus = database.strainsNoteAngle[index] * 0.1;
+            double angleBonus = database.strainsNoteAngle[index] * 0.06;
 
             // 핑거 컨트롤 보너스
             // 릴렉스라서 값이 작음
@@ -108,7 +108,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             return
                 totalBonus *
                 (calculateForJump(0, jumpDistanceExp * ScaleBonusDeltaTime, travelDistanceExp * ScaleBonusDeltaTime, osuCurrent.StrainTime) * 0.8 +
-                calculateForJump(0, jumpDistanceExp * osuCurrent.ScalingFactor, travelDistanceExp * osuCurrent.ScalingFactor, 1000));
+                calculateForJump(0, jumpDistanceExp * osuCurrent.ScalingFactor, travelDistanceExp * osuCurrent.ScalingFactor, 1320));
         }
 
         private double calculateForJump(double result, double jumpDistanceExp, double travelDistanceExp, double strainTime)

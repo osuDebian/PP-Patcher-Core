@@ -59,7 +59,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
 
             // 하드락은 기본적으로 디스턴스가 넓은 곳에서 강하게 작용한다
             // 그렇지만 어느정도 DT와의 시너지 효과를 주기 위해 약간의 보너스를 넣어준다
-            double ScaleBonusDeltaTime = 1 + (osuCurrent.ScalingFactor - 1) * 0.5;
+            double ScaleBonusDeltaTime = 1 + (osuCurrent.ScalingFactor - 1) * 0.75;
             //Console.WriteLine(index);
 
             // 타이밍 보너스
@@ -67,22 +67,22 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             double timingNormal = Math.Abs(database.averageDeltaTime - osuCurrent.DeltaTime) / (database.averageDeltaTime);
             double timingDouble = Math.Abs(database.averageDeltaTime * 2 - osuCurrent.DeltaTime) / (database.averageDeltaTime * 2);
 
-            double timingVarianceBonus = Math.Min(timingHalf, Math.Min(timingNormal, timingDouble)) * 0.01;
+            double timingVarianceBonus = Math.Min(timingHalf, Math.Min(timingNormal, timingDouble)) * 0.05;
 
             /* 각 노트별 보너스를 가져와 가중치를 곱한다 */
             // 앵글 보너스
-            double angleBonus = database.strainsNoteAngle[index] * 0.1;
+            double angleBonus = database.strainsNoteAngle[index] * 0.06;
 
             // 핑거 컨트롤 보너스
             // 릴렉스라서 값이 작음
             // 이 값을 0.1정도로 주게 되면 speed value와 비슷한 효과가 난다.
-            double fingerControlBonus = database.strainsFingerControl[index] * 0.03;
+            double fingerControlBonus = database.strainsFingerControl[index] * 0.05;
 
             // 슬라이더 속도 보너스
             double sliderVelocityBonus = database.strainsSliderVelocity[index] * 0.1;
             // 스피드 보너스
             // 릴렉스라서 값이 작음
-            double speedBonus = database.strainsSpeedBonus[index] * 0.3;
+            double speedBonus = database.strainsSpeedBonus[index] * 0.5;
             index++;
 
             double totalBonus = Math.Pow(
@@ -102,7 +102,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             return
                 totalBonus *
                 (calculateForJump(jumpDistanceExp * ScaleBonusDeltaTime, travelDistanceExp * ScaleBonusDeltaTime, osuCurrent.StrainTime) * 0.8 +
-                calculateForJump(jumpDistanceExp * osuCurrent.ScalingFactor, travelDistanceExp * osuCurrent.ScalingFactor, 1000));
+                calculateForJump(jumpDistanceExp * osuCurrent.ScalingFactor, travelDistanceExp * osuCurrent.ScalingFactor, 1320));
         }
 
         private double calculateForJump(double jumpDistanceExp, double travelDistanceExp, double strainTime)
