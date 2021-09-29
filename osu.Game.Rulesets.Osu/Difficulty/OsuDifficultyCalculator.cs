@@ -98,13 +98,23 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             }
         }
 
-        protected override PerNoteStrainSkill[] GetPreLoadedSkills(IBeatmap beatmap, Mod[] mods, double clockRate) => new PerNoteStrainSkill[]
-        {
-            new NoteVarianceAngle(beatmap, mods, clockRate),
-            new NoteVarianceFingerControl(beatmap, mods, clockRate),
-            new NoteVarianceSliderVelocity(beatmap, mods, clockRate),
-            new AverageTiming(beatmap, mods, clockRate),
-        };
+        protected override PerNoteStrainSkill[] GetPreLoadedSkills(IBeatmap beatmap, Mod[] mods, double clockRate) {
+
+            HitWindows hitWindows = new OsuHitWindows();
+            hitWindows.SetDifficulty(beatmap.BeatmapInfo.BaseDifficulty.OverallDifficulty);
+
+            // Todo: These int casts are temporary to achieve 1:1 results with osu!stable, and should be removed in the future
+            double hitWindowGreat = (int)(hitWindows.WindowFor(HitResult.Great)) / clockRate;
+
+            return new PerNoteStrainSkill[]
+                {
+                    new NoteVarianceAngle(beatmap, mods, clockRate),
+                    new NoteVarianceFingerControl(beatmap, mods, clockRate),
+                    new NoteVarianceSliderVelocity(beatmap, mods, clockRate),
+                    new AverageTiming(beatmap, mods, clockRate),
+                    new SpeedBonus(beatmap, mods, clockRate, hitWindowGreat),
+                };
+        }
 
         protected override Skill[] CreateSkills(IBeatmap beatmap, Mod[] mods, double clockRate) => new Skill[]
         {
@@ -124,6 +134,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             database.strainsFingerControl = preloadedStrainSkills[1].GetAllStrainPeaks();
             database.strainsSliderVelocity = preloadedStrainSkills[2].GetAllStrainPeaks();
             database.averageDeltaTime = preloadedStrainSkills[3].DifficultyValue();
+            database.strainsSpeedBonus = preloadedStrainSkills[4].GetAllStrainPeaks();
             //Console.WriteLine(database.averageDeltaTime);
         }
 

@@ -10,5 +10,6 @@ namespace osu.Game.Rulesets.Osu.Difficulty
         public List<double> strainsNoteAngle;
         public List<double> strainsFingerControl;
         public List<double> strainsSliderVelocity;
+        public List<double> strainsSpeedBonus;
     }
 }

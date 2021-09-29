@@ -61,7 +61,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             // 그렇지만 어느정도 DT와의 시너지 효과를 주기 위해 약간의 보너스를 넣어준다
             // HardRock basically works strongly in a wide distance.
             // However, some bonus is added to give some synergy with DT.
-            double ScaleBonusDeltaTime = 1 + (osuCurrent.ScalingFactor - 1) * 0.5;
+            double ScaleBonusDeltaTime = 1 + (osuCurrent.ScalingFactor - 1) * 0.35;
 
             // 타이밍 보너스
             // 평균과 차이가 많이 나는 노트에 대해 보너스를 부여한다.
@@ -78,25 +78,29 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
              */
             // 앵글 변화 보너스
             // angle variance bonus
-            double angleBonus = database.strainsNoteAngle[index] * 0.12;
+            double angleBonus = database.strainsNoteAngle[index] * 0.09;
 
             // 핑거 컨트롤 보너스
             // 릴렉스라서 값이 작음
             // 이 값을 0.1정도로 주게 되면 speed value와 비슷한 효과가 난다.
-            double fingerControlBonus = database.strainsFingerControl[index] * 0.01;
+            double fingerControlBonus = database.strainsFingerControl[index] * 0.025;
 
             // 슬라이더 속도 보너스
-            double sliderVelocityBonus = database.strainsSliderVelocity[index] * 0.065;
+            double sliderVelocityBonus = database.strainsSliderVelocity[index] * 0.13;
+
+            // 스피드 보너스
+            double speedBonus = database.strainsSpeedBonus[index] * 4;
+            //double speedBonus = Math.Pow(5.0 * Math.Max(1.0, database.strainsSpeedBonus[index] / 0.0675) - 4.0, 3.0) / 100000.0 / 100000000;
+
             index++;
 
             double totalBonus = Math.Pow(
-                (Math.Pow(0.98 + angleBonus, 1.2)) *
+                (Math.Pow(0.99 + angleBonus, 1.2)) *
                 (Math.Pow(0.99 + fingerControlBonus, 1.2)) *
-                (Math.Pow(0.98 + sliderVelocityBonus, 1.2)) *
-                (Math.Pow(0.98 + timingVarianceBonus, 1.2))
-                , 1.0 / 1.2)
-                //+ timingVarianceBonus * 0.5
-                ;
+                (Math.Pow(0.99 + sliderVelocityBonus, 1.2)) *
+                (Math.Pow(0.99 + timingVarianceBonus, 1.2)) *
+                (Math.Pow(0.99 + speedBonus, 1.2))
+                , 1.0 / 1.2);
 
             // 기본적으로 점프에 대해 계산하고, 노트간 텀을 400ms로 고정해 계산한 점프를 더한다.
             // 이렇게 되면 디스턴스는 짧은데 텀도 짧아(dt) 넓은 점프로 간주되는 문제를 해소한다.

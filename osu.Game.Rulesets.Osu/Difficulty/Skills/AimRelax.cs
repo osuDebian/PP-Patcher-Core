@@ -67,26 +67,31 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             double timingNormal = Math.Abs(database.averageDeltaTime - osuCurrent.DeltaTime) / (database.averageDeltaTime);
             double timingDouble = Math.Abs(database.averageDeltaTime * 2 - osuCurrent.DeltaTime) / (database.averageDeltaTime * 2);
 
-            double timingVarianceBonus = Math.Min(timingHalf, Math.Min(timingNormal, timingDouble)) * 0.1;
+            double timingVarianceBonus = Math.Min(timingHalf, Math.Min(timingNormal, timingDouble)) * 0.02;
 
             /* 각 노트별 보너스를 가져와 가중치를 곱한다 */
             // 앵글 보너스
-            double angleBonus = database.strainsNoteAngle[index] * 0.1;
+            double angleBonus = database.strainsNoteAngle[index] * 0.09;
 
             // 핑거 컨트롤 보너스
             // 릴렉스라서 값이 작음
             // 이 값을 0.1정도로 주게 되면 speed value와 비슷한 효과가 난다.
-            double fingerControlBonus = database.strainsFingerControl[index] * 0.01;
+            double fingerControlBonus = database.strainsFingerControl[index] * 0.02;
 
             // 슬라이더 속도 보너스
-            double sliderVelocityBonus = database.strainsSliderVelocity[index] * 0.065;
+            double sliderVelocityBonus = database.strainsSliderVelocity[index] * 0.13;
+
+            // 스피드 보너스
+            // 릴렉스라서 값이 작음
+            double speedBonus = database.strainsSpeedBonus[index] * 0.5;
             index++;
 
             double totalBonus = Math.Pow(
-                (Math.Pow(0.98 + angleBonus, 1.2)) *
+                (Math.Pow(0.99 + angleBonus, 1.2)) *
                 (Math.Pow(0.99 + fingerControlBonus, 1.2)) *
-                (Math.Pow(0.98 + sliderVelocityBonus, 1.2)) *
-                (Math.Pow(0.98 + timingVarianceBonus, 1.2))
+                (Math.Pow(0.99 + sliderVelocityBonus, 1.2)) *
+                (Math.Pow(0.99 + timingVarianceBonus, 1.2)) *
+                (Math.Pow(0.99 + speedBonus, 1.2))
                 , 1.0 / 1.2)
                 //+ timingVarianceBonus * 0.5
                 ;

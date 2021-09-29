@@ -73,57 +73,6 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             return totalValue;
         }
 
-        public double CalculateBefore(Dictionary<string, double> categoryRatings = null)
-        {
-            mods = Score.Mods;
-            accuracy = Score.Accuracy;
-            scoreMaxCombo = Score.MaxCombo;
-            countGreat = Score.Statistics.GetValueOrDefault(HitResult.Great);
-            countOk = Score.Statistics.GetValueOrDefault(HitResult.Ok);
-            countMeh = Score.Statistics.GetValueOrDefault(HitResult.Meh);
-            countMiss = Score.Statistics.GetValueOrDefault(HitResult.Miss);
-
-            //if (mods.Any(it => it is OsuModRelax))
-            //{
-            //    return CalculateRelax(categoryRatings);
-            //}
-
-            // Custom multipliers for NoFail and SpunOut.
-            double multiplier = 1.12; // This is being adjusted to keep the final pp value scaled around what it used to be when changing things
-
-            if (mods.Any(m => m is OsuModNoFail))
-                multiplier *= Math.Max(0.90, 1.0 - 0.02 * countMiss);
-
-            if (mods.Any(m => m is OsuModSpunOut))
-                multiplier *= 1.0 - Math.Pow((double)Attributes.SpinnerCount / totalHits, 0.85);
-
-            double aimValue = computeAimValue();
-            double speedValue = computeSpeedValue();
-            double accuracyValue = computeAccuracyValue();
-            double totalValue =
-                Math.Pow(
-                    Math.Pow(aimValue, 1.1) +
-                    //Math.Pow(speedValue, 1.1) +
-                    Math.Pow(accuracyValue, 1.1), 1.0 / 1.1
-                ) * multiplier;
-
-            if (categoryRatings != null)
-            {
-                categoryRatings.Add("Aim", aimValue);
-                categoryRatings.Add("Speed", speedValue);
-                categoryRatings.Add("Accuracy", accuracyValue);
-                categoryRatings.Add("OD", Attributes.OverallDifficulty);
-                categoryRatings.Add("AR", Attributes.ApproachRate);
-                categoryRatings.Add("Max Combo", Attributes.MaxCombo);
-            }
-
-            return totalValue;
-        }
-
-        //public override double Calculate(Dictionary<string, double> categoryRatings = null)
-        //{
-        //    return CalculateRelax(categoryRatings);
-        //}
         public override double Calculate(Dictionary<string, double> categoryRatings = null)
         {
             mods = Score.Mods;
@@ -149,7 +98,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty
                 multiplier *= 1.0 - Math.Pow((double)Attributes.SpinnerCount / totalHits, 0.85);
 
             double aimValue = computeAimValue();
-            double speedValue = computeSpeedValue();
+            //double speedValue = computeSpeedValue();
+            double speedValue = 0;
             double accuracyValue = computeAccuracyValue();
             double totalValue =
                 Math.Pow(

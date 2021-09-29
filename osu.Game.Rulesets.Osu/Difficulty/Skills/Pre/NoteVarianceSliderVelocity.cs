@@ -32,7 +32,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             {
                 if(lastVelocity >= 0)
                 {
-                    result = Math.Max(OsuSlider.Velocity - lastVelocity, 0) * 1.5;
+                    result = Math.Max(OsuSlider.Velocity - lastVelocity, 0);
                 }
                 lastVelocity = OsuSlider.Velocity;
 
