@@ -58,7 +58,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             // 이렇게 되면 디스턴스는 짧은데 텀도 짧아(dt) 넓은 점프로 간주되는 문제를 해소한다.
             //return calculateForJump(result, jumpDistanceExp, travelDistanceExp, osuCurrent.StrainTime);
             return calculateForJump(result, jumpDistanceExp, travelDistanceExp, osuCurrent.StrainTime) * 0.8 +
-                calculateForJump(0, jumpDistanceExp, travelDistanceExp, 600);
+                calculateForJump(0, jumpDistanceExp, travelDistanceExp, 1320);
         }
 
         private double calculateForJump(double result, double jumpDistanceExp, double travelDistanceExp, double strainTime)
