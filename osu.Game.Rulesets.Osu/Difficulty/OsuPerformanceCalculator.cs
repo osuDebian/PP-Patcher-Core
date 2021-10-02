@@ -247,8 +247,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             // aimValue *= log(10 + (12 - AR)^(2.5)) / 2
             // hidden multiplier 1.8
             double lowarBonus = Math.Log10(9
-                + Math.Pow(Math.Min(12 - Attributes.ApproachRate, 8), 1.5) * 2.5 // 42.22
-                * (mods.Any(h => h is OsuModHidden) ? 1.8 : 1));
+                + Math.Pow(Math.Min(12 - Attributes.ApproachRate, 8), 1.5) * 2 // 42.22
+                * (mods.Any(h => h is OsuModHidden) ? 1.5 : 1));
             //Console.WriteLine(lowarBonus);
             aimValue *= lowarBonus;
 
