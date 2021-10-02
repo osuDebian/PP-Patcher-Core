@@ -410,7 +410,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             double JumpRate = (Attributes.DistanceAverage / Attributes.DistanceTop);
             double StreamThresholdLength = 0.7;
             double StreamFirstLength = Math.Max((StreamThresholdLength - JumpRate), 0);
-            double StreamNerfRateLength = Math.Max(1 - StreamFirstLength * 2.25, 0.05);
+            double StreamNerfRateLength = Math.Max(1 - StreamFirstLength * 1.5, 0.05);
             //Console.WriteLine(StreamNerfRateLength);
             //Console.WriteLine(Math.Min(1.15, Math.Pow(amountHitObjectsWithAccuracy / 2000.0 * StreamNerfRateLength, 0.3)));
             accuracyValue *= Math.Min(1.15, Math.Pow(amountHitObjectsWithAccuracy / 1000.0 * StreamNerfRateLength, 0.3));
