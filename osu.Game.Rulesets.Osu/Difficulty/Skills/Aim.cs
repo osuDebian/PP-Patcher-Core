@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using osu.Game.Rulesets.Difficulty;
 using osu.Game.Rulesets.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Osu.Difficulty.Preprocessing;
@@ -17,39 +18,47 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
         private const double angle_bonus_begin = Math.PI / 3;
         private const double timing_threshold = 107;
 
-        public Aim(Mod[] mods)
+        private readonly PreNoteDatabase database;
+
+        public Aim(PreNoteDatabase database, Mod[] mods)
             : base(mods)
         {
+            this.database = database;
         }
 
         protected override double SkillMultiplier => 26.25;
         protected override double StrainDecayBase => 0.15;
 
-        protected override double StrainValueOf(DifficultyHitObject current)
+        protected override double StrainValueOf(int index, DifficultyHitObject current)
         {
             if (current.BaseObject is Spinner)
                 return 0;
 
             var osuCurrent = (OsuDifficultyHitObject)current;
 
-            double result = 0;
+            //Console.WriteLine(database.preSkills[0].GetAllStrainPeaks().Count);
+            //Console.WriteLine(database.preSkills.Length);
+            double result = 1 + database.preSkills[0].GetAllStrainPeaks()[index] * 0.75
+                //+ database.preSkills[1].GetAllStrainPeaks()[index] * 0.1
+                ;
+            double sliderBonus = 1 + database.preSkills[1].GetAllStrainPeaks()[index];
 
-            if (Previous.Count > 0)
-            {
-                var osuPrevious = (OsuDifficultyHitObject)Previous[0];
+            //if (Previous.Count > 0)
+            //{
+            //    var osuPrevious = (OsuDifficultyHitObject)Previous[0];
 
-                if (osuCurrent.Angle != null && osuCurrent.Angle.Value > angle_bonus_begin)
-                {
-                    // 이걸 대체 왜하는거지?
-                    const double scale = 0;
+            //    if (osuCurrent.Angle != null && osuCurrent.Angle.Value > angle_bonus_begin)
+            //    {
+            //        // 이걸 대체 왜하는거지?
+            //        const double scale = 0;
 
-                    var angleBonus = Math.Sqrt(
-                        Math.Max(osuPrevious.JumpDistance - scale, 0)
-                        * Math.Pow(Math.Sin(osuCurrent.Angle.Value - angle_bonus_begin), 2)
-                        * Math.Max(osuCurrent.JumpDistance - scale, 0));
-                    result = 1.2 * applyDiminishingExp(Math.Max(0, angleBonus)) / Math.Max(timing_threshold, osuPrevious.StrainTime);
-                }
-            }
+            //        var angleBonus = Math.Sqrt(
+            //            Math.Max(osuPrevious.JumpDistance - scale, 0)
+            //            * Math.Pow(Math.Sin(osuCurrent.Angle.Value - angle_bonus_begin), 2)
+            //            * Math.Max(osuCurrent.JumpDistance - scale, 0));
+            //        result = 1.2 * applyDiminishingExp(Math.Max(0, angleBonus)) / Math.Max(timing_threshold, osuPrevious.StrainTime);
+            //    }
+            //}
 
             double jumpDistanceExp = applyDiminishingExp(osuCurrent.JumpDistance);
             double travelDistanceExp = applyDiminishingExp(osuCurrent.TravelDistance);
@@ -59,8 +68,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             // 기본적으로 점프에 대해 계산하고, 노트간 텀을 400ms로 고정해 계산한 점프를 더한다.
             // 이렇게 되면 디스턴스는 짧은데 텀도 짧아(dt) 넓은 점프로 간주되는 문제를 해소한다.
             //return calculateForJump(result, jumpDistanceExp, travelDistanceExp, osuCurrent.StrainTime);
-            return calculateForJump(result, jumpDistanceExp, travelDistanceExp, osuCurrent.StrainTime) * 0.95 +
-                calculateForJump(0, jumpDistanceExp, travelDistanceExp, 320) * 0.1;
+            return result * (calculateForJump(0, jumpDistanceExp, travelDistanceExp * sliderBonus, osuCurrent.StrainTime) * 0.95 +
+                calculateForJump(0, jumpDistanceExp, travelDistanceExp * sliderBonus, 320) * 0.1);
         }
 
         private double calculateForJump(double result, double jumpDistanceExp, double travelDistanceExp, double strainTime)

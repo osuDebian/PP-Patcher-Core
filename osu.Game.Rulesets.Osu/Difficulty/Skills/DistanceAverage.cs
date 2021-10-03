@@ -24,7 +24,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             return sum / count;
         }
 
-        protected override void Process(DifficultyHitObject pCurrent)
+        protected override void Process(int index, DifficultyHitObject pCurrent)
         {
             var current = (OsuDifficultyHitObject)pCurrent;
             sum += current.JumpDistance + current.TravelDistance;

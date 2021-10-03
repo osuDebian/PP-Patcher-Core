@@ -37,6 +37,11 @@ namespace osu.Game.Rulesets.Taiko.Difficulty
             new Stamina(mods, false),
         };
 
+        protected override PrePerNoteStrainSkill[] CreatePreloadedSkills(IBeatmap beatmap, Mod[] mods, double clockRate)
+        {
+            return new PrePerNoteStrainSkill[] { };
+        }
+
         protected override Mod[] DifficultyAdjustmentMods => new Mod[]
         {
             new TaikoModDoubleTime(),
@@ -62,7 +67,7 @@ namespace osu.Game.Rulesets.Taiko.Difficulty
             return taikoDifficultyHitObjects;
         }
 
-        protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate)
+        protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, PrePerNoteStrainSkill[] preSkills, Skill[] skills, double clockRate)
         {
             if (beatmap.HitObjects.Count == 0)
                 return new TaikoDifficultyAttributes { Mods = mods, Skills = skills };

@@ -11,6 +11,7 @@ using osu.Game.Rulesets.Difficulty.Skills;
 using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Osu.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Osu.Difficulty.Skills;
+using osu.Game.Rulesets.Osu.Difficulty.Skills.Pre;
 using osu.Game.Rulesets.Osu.Mods;
 using osu.Game.Rulesets.Osu.Objects;
 using osu.Game.Rulesets.Osu.Scoring;
@@ -47,7 +48,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
         //    return sum / (beatmap.HitObjects.Count - 1);
         //}
 
-        protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate)
+        protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, PrePerNoteStrainSkill[] preSkills, Skill[] skills, double clockRate)
         {
             if (beatmap.HitObjects.Count == 0)
                 return new OsuDifficultyAttributes { Mods = mods, Skills = skills };
@@ -111,11 +112,19 @@ namespace osu.Game.Rulesets.Osu.Difficulty
 
         protected override Skill[] CreateSkills(IBeatmap beatmap, Mod[] mods, double clockRate) => new Skill[]
         {
-            new Aim(mods),
+            new Aim(database, mods),
             new Speed(mods),
             new DistanceAverage(mods),
             new DistanceTop(mods),
         };
+
+        protected override PrePerNoteStrainSkill[] CreatePreloadedSkills(IBeatmap beatmap, Mod[] mods, double clockRate)
+        {
+            return new PrePerNoteStrainSkill[] {
+                new NoteVarianceAngle(beatmap, mods, clockRate),
+                new NoteVarianceSliderVelocity(beatmap, mods, clockRate),
+            };
+        }
 
         protected override Mod[] DifficultyAdjustmentMods => new Mod[]
         {
@@ -124,5 +133,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             new OsuModEasy(),
             new OsuModHardRock(),
         };
+
+
     }
 }

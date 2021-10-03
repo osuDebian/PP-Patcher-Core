@@ -55,7 +55,7 @@ namespace osu.Game.Rulesets.Difficulty.Skills
         /// <summary>
         /// Process a <see cref="DifficultyHitObject"/> and update current strain values accordingly.
         /// </summary>
-        protected sealed override void Process(DifficultyHitObject current)
+        protected sealed override void Process(int index, DifficultyHitObject current)
         {
             // The first object doesn't generate a strain, so we begin with an incremented section end
             if (Previous.Count == 0)
@@ -69,7 +69,7 @@ namespace osu.Game.Rulesets.Difficulty.Skills
             }
 
             CurrentStrain *= strainDecay(current.DeltaTime);
-            CurrentStrain += StrainValueOf(current) * SkillMultiplier;
+            CurrentStrain += StrainValueOf(index, current) * SkillMultiplier;
 
             currentSectionPeak = Math.Max(CurrentStrain, currentSectionPeak);
         }
@@ -128,7 +128,7 @@ namespace osu.Game.Rulesets.Difficulty.Skills
         /// <summary>
         /// Calculates the strain value of a <see cref="DifficultyHitObject"/>. This value is affected by previously processed objects.
         /// </summary>
-        protected abstract double StrainValueOf(DifficultyHitObject current);
+        protected abstract double StrainValueOf(int index, DifficultyHitObject current);
 
         private double strainDecay(double ms) => Math.Pow(StrainDecayBase, ms / 1000);
     }

@@ -34,7 +34,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
         {
         }
 
-        protected override double StrainValueOf(DifficultyHitObject current)
+        protected override double StrainValueOf(int index, DifficultyHitObject current)
         {
             if (current.BaseObject is Spinner)
                 return 0;

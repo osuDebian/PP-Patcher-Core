@@ -35,7 +35,7 @@ namespace osu.Game.Rulesets.Mania.Difficulty
             originalOverallDifficulty = beatmap.BeatmapInfo.BaseDifficulty.OverallDifficulty;
         }
 
-        protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, Skill[] skills, double clockRate)
+        protected override DifficultyAttributes CreateDifficultyAttributes(IBeatmap beatmap, Mod[] mods, PrePerNoteStrainSkill[] preSkills, Skill[] skills, double clockRate)
         {
             if (beatmap.HitObjects.Count == 0)
                 return new ManiaDifficultyAttributes { Mods = mods, Skills = skills };
@@ -107,6 +107,11 @@ namespace osu.Game.Rulesets.Mania.Difficulty
                     new MultiMod(new ManiaModKey9(), new ManiaModDualStages()),
                 }).ToArray();
             }
+        }
+
+        protected override PrePerNoteStrainSkill[] CreatePreloadedSkills(IBeatmap beatmap, Mod[] mods, double clockRate)
+        {
+            return new PrePerNoteStrainSkill[] { };
         }
 
         private int getHitWindow300(Mod[] mods)
