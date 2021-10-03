@@ -60,50 +60,59 @@ namespace osu.Desktop
 
             var list = new List<CalculateData>
             {
+                new CalculateData("", new Mod[] {
+                    //new OsuModRelax(),
+                    //new OsuModHidden(),
+                    //new OsuModDoubleTime(),
+                }, 1),
+                new CalculateData("hdhr", new Mod[] {
+                    //new OsuModRelax(),
+                    new OsuModHidden(),
+                    new OsuModHardRock(),
+                }, 1),
+                new CalculateData("hddt", new Mod[] {
+                    //new OsuModRelax(),
+                    new OsuModHidden(),
+                    new OsuModDoubleTime(),
+                }, 1),
                 new CalculateData("rx", new Mod[] {
                     new OsuModRelax(),
                     //new OsuModHidden(),
                     //new OsuModDoubleTime(),
                 }, 1),
-                //new CalculateData("ezrx", new Mod[] {
-                //    new OsuModRelax(),
-                //    new OsuModEasy(),
-                //    //new OsuModHidden(),
-                //    //new OsuModDoubleTime(),
-                //}, 1),
                 new CalculateData("hdhrrx", new Mod[] {
                     new OsuModRelax(),
                     new OsuModHidden(),
                     new OsuModHardRock(),
                 }, 1),
-                new CalculateData("dtezrx", new Mod[] {
-                    new OsuModRelax(),
-                    new OsuModHidden(),
-                    new OsuModDoubleTime(),
-                    new OsuModEasy(),
-                }, 1),
-                new CalculateData("dthdrx", new Mod[] {
+                new CalculateData("hddtrx", new Mod[] {
                     new OsuModRelax(),
                     new OsuModHidden(),
                     new OsuModDoubleTime(),
                 }, 1),
+                new CalculateData("hddthrrx", new Mod[] {
+                    new OsuModRelax(),
+                    new OsuModDoubleTime(),
+                    new OsuModHidden(),
+                    new OsuModHardRock(),
+                }, 1),
+                //new CalculateData("dtrx", new Mod[] {
+                //    new OsuModRelax(),
+                //    //new OsuModHidden(),
+                //    new OsuModDoubleTime(),
+                //}, 1),
                 //new CalculateData("dthdrx97", new Mod[] {
                 //    new OsuModRelax(),
                 //    new OsuModHidden(),
                 //    new OsuModDoubleTime(),
                 //}, 0.97),
-                new CalculateData("dthdhrrx", new Mod[] {
-                    new OsuModRelax(),
-                    new OsuModDoubleTime(),
-                    new OsuModHidden(),
-                    new OsuModHardRock(),
-                }, 1),
-                new CalculateData("dthdhrrx", new Mod[] {
-                    new OsuModRelax(),
-                    new OsuModDoubleTime(),
-                    new OsuModHidden(),
-                    new OsuModHardRock(),
-                }, 0.97),
+                //new CalculateData("dthdhr", new Mod[] {
+                //    //new OsuModRelax(),
+                //    new OsuModDoubleTime(),
+                //    new OsuModHidden(),
+                //    new OsuModHardRock(),
+                //}, 1),
+
                 //new CalculateData("dthdhrrx97", new Mod[] {
                 //    new OsuModRelax(),
                 //    new OsuModDoubleTime(),

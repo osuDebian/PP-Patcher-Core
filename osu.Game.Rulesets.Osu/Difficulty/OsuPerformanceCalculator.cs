@@ -42,7 +42,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             countMiss = Score.Statistics.GetValueOrDefault(HitResult.Miss);
 
             // Custom multipliers for NoFail and SpunOut.
-            double multiplier = 1.12; // This is being adjusted to keep the final pp value scaled around what it used to be when changing things
+            double multiplier = 1.2; // This is being adjusted to keep the final pp value scaled around what it used to be when changing things
 
             if (mods.Any(m => m is OsuModNoFail))
                 multiplier *= Math.Max(0.90, 1.0 - 0.02 * countMiss);
@@ -73,57 +73,6 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             return totalValue;
         }
 
-        public double CalculateBefore(Dictionary<string, double> categoryRatings = null)
-        {
-            mods = Score.Mods;
-            accuracy = Score.Accuracy;
-            scoreMaxCombo = Score.MaxCombo;
-            countGreat = Score.Statistics.GetValueOrDefault(HitResult.Great);
-            countOk = Score.Statistics.GetValueOrDefault(HitResult.Ok);
-            countMeh = Score.Statistics.GetValueOrDefault(HitResult.Meh);
-            countMiss = Score.Statistics.GetValueOrDefault(HitResult.Miss);
-
-            //if (mods.Any(it => it is OsuModRelax))
-            //{
-            //    return CalculateRelax(categoryRatings);
-            //}
-
-            // Custom multipliers for NoFail and SpunOut.
-            double multiplier = 1.12; // This is being adjusted to keep the final pp value scaled around what it used to be when changing things
-
-            if (mods.Any(m => m is OsuModNoFail))
-                multiplier *= Math.Max(0.90, 1.0 - 0.02 * countMiss);
-
-            if (mods.Any(m => m is OsuModSpunOut))
-                multiplier *= 1.0 - Math.Pow((double)Attributes.SpinnerCount / totalHits, 0.85);
-
-            double aimValue = computeAimValue();
-            double speedValue = computeSpeedValue();
-            double accuracyValue = computeAccuracyValue();
-            double totalValue =
-                Math.Pow(
-                    Math.Pow(aimValue, 1.1) +
-                    //Math.Pow(speedValue, 1.1) +
-                    Math.Pow(accuracyValue, 1.1), 1.0 / 1.1
-                ) * multiplier;
-
-            if (categoryRatings != null)
-            {
-                categoryRatings.Add("Aim", aimValue);
-                categoryRatings.Add("Speed", speedValue);
-                categoryRatings.Add("Accuracy", accuracyValue);
-                categoryRatings.Add("OD", Attributes.OverallDifficulty);
-                categoryRatings.Add("AR", Attributes.ApproachRate);
-                categoryRatings.Add("Max Combo", Attributes.MaxCombo);
-            }
-
-            return totalValue;
-        }
-
-        //public override double Calculate(Dictionary<string, double> categoryRatings = null)
-        //{
-        //    return CalculateRelax(categoryRatings);
-        //}
         public override double Calculate(Dictionary<string, double> categoryRatings = null)
         {
             mods = Score.Mods;
@@ -149,7 +98,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty
                 multiplier *= 1.0 - Math.Pow((double)Attributes.SpinnerCount / totalHits, 0.85);
 
             double aimValue = computeAimValue();
-            double speedValue = computeSpeedValue();
+            //double speedValue = computeSpeedValue();
+            double speedValue = 0;
             double accuracyValue = computeAccuracyValue();
             double totalValue =
                 Math.Pow(
@@ -178,7 +128,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
 
         private double computeAimValueRelax()
         {
-            double rawAim = Attributes.AimStrain;
+            double rawAim = Attributes.AimStrainRelax;
 
             if (mods.Any(m => m is OsuModTouchDevice))
                 rawAim = Math.Pow(rawAim, 0.8);
@@ -196,7 +146,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             // stream nerf
             
             double JumpRate = (Attributes.DistanceAverage / Attributes.DistanceTop);
-            double StreamThresholdLength = 0.7;
+            double StreamThresholdLength = 0.8;
             double StreamFirst = Math.Max(StreamThresholdLength - JumpRate, 0);
             //double StreamFirst = Math.Max((1.0 / 2.0) * Math.Cos(toRadians(180 + (180.0) * (JumpRate - 0.3) * (1 / 0.4))) + 0.5, 0);
             // 0.3의 값일때 cos(180)
@@ -206,7 +156,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             //Console.WriteLine("lengthBonusRate: " + StreamFirst + ", " + JumpRate + ", " + (180 + (180.0) * (JumpRate - 0.3) * (1 / 0.4)));
             //if (JumpRate <= 0.3) StreamNerfRateLength = 0;
             //if (JumpRate >= 0.7) StreamNerfRateLength = 1;
-            double StreamNerfRateLength = Math.Max(1 - StreamFirst * 2, 0);
+            double StreamNerfRateLength = Math.Max(1 - StreamFirst * 1.25, 0);
 
             //Console.WriteLine(Attributes.HitCircleCount + ", "
             //    + totalHits + ", "
@@ -214,14 +164,21 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             //    + StreamNerfRateLength);
 
 
-            double lengthBonus = 0.95 + 0.8 * Math.Min(2.0, totalHits / 2000.0) * StreamNerfRateLength;
+            double lengthBonus = 0.95
+                                    + 0.05 * Math.Min(1.0, totalHits / 500) * StreamNerfRateLength
+                                    + 0.2 * Math.Max(Math.Min(1.0, (totalHits - 500) / 500), 0) * StreamNerfRateLength
+                                    + 0.8 * Math.Max(Math.Min(1.0, (totalHits - 1000) / 2000.0), 0) * StreamNerfRateLength;
+                                    ;
             //Console.WriteLine(lengthBonus + ", " + JumpRate);
+            //Console.WriteLine(lengthBonus);
             aimValue *= lengthBonus;
 
             // Penalize misses by assessing # of misses relative to the total # of objects. Default a 3% reduction for any # of misses.
+            //if (countMiss > 0)
+            //    aimValue *= 0.97 * Math.Pow(1 - Math.Pow((double)countMiss / totalHits, 0.775), countMiss);
             if (countMiss > 0)
-                aimValue *= 0.97 * Math.Pow(1 - Math.Pow((double)countMiss / totalHits, 0.775), countMiss);
-
+                aimValue *= Math.Pow(0.95, countMiss);
+            
             // Combo scaling
             if (Attributes.MaxCombo > 0)
                 aimValue *= Math.Min(Math.Pow(scoreMaxCombo, 0.8) / Math.Pow(Attributes.MaxCombo, 0.8), 1.0);
@@ -247,8 +204,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             // aimValue *= log(10 + (12 - AR)^(2.5)) / 2
             // hidden multiplier 1.8
             double lowarBonus = Math.Log10(9
-                + Math.Pow(Math.Min(12 - Attributes.ApproachRate, 8), 1.5) * 2 // 42.22
-                * (mods.Any(h => h is OsuModHidden) ? 1.5 : 1));
+                + Math.Min(Math.Pow((12 - Attributes.ApproachRate), 2), 64) // 42.22
+                * (mods.Any(h => h is OsuModHidden) ? 1.8 : 1));
             //Console.WriteLine(lowarBonus);
             aimValue *= lowarBonus;
 
@@ -302,6 +259,11 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             // Longer maps are worth more
             double lengthBonus = 0.95 + 0.4 * Math.Min(1.0, totalHits / 2000.0) +
                                  (totalHits > 2000 ? Math.Log10(totalHits / 2000.0) * 0.5 : 0.0);
+            //double lengthBonus = 0.95
+            //            + 0.05 * Math.Min(1.0, totalHits / 500)
+            //            + 0.2 * Math.Max(Math.Min(1.0, (totalHits - 500) / 500), 0)
+            //            + 0.4 * Math.Max(Math.Min(1.0, (totalHits - 1000) / 2000.0), 0);
+            //;
 
 
             aimValue *= lengthBonus;
@@ -314,19 +276,19 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             if (Attributes.MaxCombo > 0)
                 aimValue *= Math.Min(Math.Pow(scoreMaxCombo, 0.8) / Math.Pow(Attributes.MaxCombo, 0.8), 1.0);
 
-            double approachRateFactor = 0.0;
-            if (Attributes.ApproachRate > 10.33)
-                approachRateFactor = Attributes.ApproachRate - 10.33;
-            else if (Attributes.ApproachRate < 8.0)
-                approachRateFactor = 0.025 * (8.0 - Attributes.ApproachRate);
+            //double approachRateFactor = 0.0;
+            //if (Attributes.ApproachRate > 10.33)
+            //    approachRateFactor = Attributes.ApproachRate - 10.33;
+            //else if (Attributes.ApproachRate < 8.0)
+            //    approachRateFactor = 0.025 * (8.0 - Attributes.ApproachRate);
 
-            double approachRateTotalHitsFactor = 1.0 / (1.0 + Math.Exp(-(0.007 * (totalHits - 400))));
+            //double approachRateTotalHitsFactor = 1.0 / (1.0 + Math.Exp(-(0.007 * (totalHits - 400))));
 
-            double approachRateBonus = 1.0 + (0.03 + 0.37 * approachRateTotalHitsFactor) * approachRateFactor;
+            //double approachRateBonus = 1.0 + (0.03 + 0.37 * approachRateTotalHitsFactor) * approachRateFactor;
 
             // We want to give more reward for lower AR when it comes to aim and HD. This nerfs high AR and buffs lower AR.
-            if (mods.Any(h => h is OsuModHidden))
-                aimValue *= 1.0 + 0.04 * (12.0 - Attributes.ApproachRate);
+            //if (mods.Any(h => h is OsuModHidden))
+            //    aimValue *= 1.0 + 0.04 * (12.0 - Attributes.ApproachRate);
 
             double flashlightBonus = 1.0;
 
@@ -340,7 +302,22 @@ namespace osu.Game.Rulesets.Osu.Difficulty
                                       : 0.0);
             }
 
-            aimValue *= Math.Max(flashlightBonus, approachRateBonus);
+            aimValue *= flashlightBonus;
+
+            // low AR buff
+            // 이지 유저 보완 코드.
+            // AR이 낮으면 낮을수록 아주 크게 버프받는다. AR 4까지 보장
+            // aimValue *= log(10 + (12 - AR)^(2.5)) / 2
+            // hidden multiplier 1.8
+            double lowarBonus = Math.Log10(9
+                + Math.Pow(Math.Min(12 - Attributes.ApproachRate, 8), 1.5) * 2 // 42.22
+                * (mods.Any(h => h is OsuModHidden) ? 1.5 : 1));
+            //Console.WriteLine(lowarBonus);
+            aimValue *= lowarBonus;
+
+            
+
+            //aimValue *= Math.Max(flashlightBonus, approachRateBonus);
 
             // Scale the aim value with accuracy _slightly_
             aimValue *= 0.5 + accuracy / 2.0;
@@ -403,14 +380,14 @@ namespace osu.Game.Rulesets.Osu.Difficulty
 
             // Lots of arbitrary values from testing.
             // Considering to use derivation from perfect accuracy in a probabilistic manner - assume normal distribution
-            double accuracyValue = Math.Pow(1.52163, Attributes.OverallDifficulty) * Math.Pow(betterAccuracyPercentage, 26) * 2.83;
+            double accuracyValue = Math.Pow(1.52163, Attributes.OverallDifficulty) * Math.Pow(betterAccuracyPercentage, 26) * 2.83 * 1.1;
 
             // Bonus for many hitcircles - it's harder to keep good accuracy up for longer
             // acc 스트림 너프
             double JumpRate = (Attributes.DistanceAverage / Attributes.DistanceTop);
             double StreamThresholdLength = 0.7;
             double StreamFirstLength = Math.Max((StreamThresholdLength - JumpRate), 0);
-            double StreamNerfRateLength = Math.Max(1 - StreamFirstLength * 1.5, 0.05);
+            double StreamNerfRateLength = Math.Max(1 - StreamFirstLength * 3, 0.05);
             //Console.WriteLine(StreamNerfRateLength);
             //Console.WriteLine(Math.Min(1.15, Math.Pow(amountHitObjectsWithAccuracy / 2000.0 * StreamNerfRateLength, 0.3)));
             accuracyValue *= Math.Min(1.15, Math.Pow(amountHitObjectsWithAccuracy / 1000.0 * StreamNerfRateLength, 0.3));
@@ -439,7 +416,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
 
             // Lots of arbitrary values from testing.
             // Considering to use derivation from perfect accuracy in a probabilistic manner - assume normal distribution
-            double accuracyValue = Math.Pow(1.52163, Attributes.OverallDifficulty) * Math.Pow(betterAccuracyPercentage, 28) * 2.83;
+            double accuracyValue = Math.Pow(1.52163, Attributes.OverallDifficulty) * Math.Pow(betterAccuracyPercentage, 24) * 2.83;
 
             // Bonus for many hitcircles - it's harder to keep good accuracy up for longer
             accuracyValue *= Math.Min(1.15, Math.Pow(amountHitObjectsWithAccuracy / 2000.0, 0.3));
