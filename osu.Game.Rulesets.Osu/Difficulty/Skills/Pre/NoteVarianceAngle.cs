@@ -58,7 +58,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills.Pre
 
                 // 150bpm 이상은 예각일때 보너스 제공
                 // bonus for acute bonus at least 120bpm
-                if (deltaTimeToBpm >= 150)
+                if (deltaTimeToBpm >= 140)
                 {
                     // 스택된 예각 연타 너프
                     // nerf stacked acute stream
@@ -70,7 +70,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills.Pre
                     // 200bpm까지 유효
                     // limit of 200bpm
                     angleBonus += Math.Sin(Math.Max((Math.PI / 2 - angle), 0))
-                        * Math.Min((deltaTimeToBpm - 150), 50) / 50
+                        * Math.Min((deltaTimeToBpm - 140), 60) / 60
                         * multiplier
                         //* 0.75
                         ;

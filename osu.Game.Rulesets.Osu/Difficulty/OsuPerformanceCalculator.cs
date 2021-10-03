@@ -42,7 +42,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             countMiss = Score.Statistics.GetValueOrDefault(HitResult.Miss);
 
             // Custom multipliers for NoFail and SpunOut.
-            double multiplier = 1.2; // This is being adjusted to keep the final pp value scaled around what it used to be when changing things
+            double multiplier = 1.12; // This is being adjusted to keep the final pp value scaled around what it used to be when changing things
 
             if (mods.Any(m => m is OsuModNoFail))
                 multiplier *= Math.Max(0.90, 1.0 - 0.02 * countMiss);
@@ -164,11 +164,13 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             //    + StreamNerfRateLength);
 
 
-            double lengthBonus = 0.95
-                                    + 0.05 * Math.Min(1.0, totalHits / 500) * StreamNerfRateLength
-                                    + 0.3 * Math.Max(Math.Min(1.0, (totalHits - 500) / 500), 0) * StreamNerfRateLength
-                                    + 0.7 * Math.Max(Math.Min(1.0, (totalHits - 1000) / 2000.0), 0) * StreamNerfRateLength;
-                                    ;
+            //double lengthBonus = 0.95
+            //                        + 0.05 * Math.Min(1.0, totalHits / 500) * StreamNerfRateLength
+            //                        + 0.3 * Math.Max(Math.Min(1.0, (totalHits - 500) / 500), 0) * StreamNerfRateLength
+            //                        + 0.7 * Math.Max(Math.Min(1.0, (totalHits - 1000) / 2000.0), 0) * StreamNerfRateLength;
+            //                        ;
+            double lengthBonus = 0.95 + (0.4 * Math.Min(1.0, totalHits / 2000.0) +
+                     (totalHits > 2000 ? Math.Log10(totalHits / 2000.0) * 0.5 : 0.0)) * StreamNerfRateLength;
             //Console.WriteLine(lengthBonus + ", " + JumpRate);
             //Console.WriteLine(lengthBonus);
             aimValue *= lengthBonus;
