@@ -392,7 +392,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             double StreamNerfRateLength = Math.Max(1 - StreamFirstLength * 2, 0.05);
             //Console.WriteLine(StreamNerfRateLength);
             //Console.WriteLine(Math.Min(1.15, Math.Pow(amountHitObjectsWithAccuracy / 2000.0 * StreamNerfRateLength, 0.3)));
-            accuracyValue *= Math.Min(1.15, Math.Pow(amountHitObjectsWithAccuracy / 1000.0 * StreamNerfRateLength, 0.3));
+            accuracyValue *= Math.Min(1.15, Math.Pow(amountHitObjectsWithAccuracy / 2000.0 * StreamNerfRateLength, 0.3));
 
             if (mods.Any(m => m is OsuModHidden))
                 accuracyValue *= 1.08;

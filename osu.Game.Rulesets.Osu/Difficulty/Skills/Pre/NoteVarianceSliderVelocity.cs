@@ -18,7 +18,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
 
         protected override double SkillMultiplier => 1;
 
-        protected override double StrainDecayBase => 0.25;
+        protected override double StrainDecayBase => 0.15;
 
         private double lastVelocity = -1;
 
@@ -39,6 +39,11 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
 
                 // default bonus for velocity
                 result += OsuSlider.Velocity / 10;
+
+                //if(result >= 0.5)
+                //{
+                //    result = 0.5;
+                //}
             }
 
             return result;

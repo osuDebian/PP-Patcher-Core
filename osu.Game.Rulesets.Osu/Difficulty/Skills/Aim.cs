@@ -41,7 +41,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty.Skills
             double result = 1 + database.preSkills[0].GetAllStrainPeaks()[index] * 0.75
                 //+ database.preSkills[1].GetAllStrainPeaks()[index] * 0.1
                 ;
-            double sliderBonus = 1 + database.preSkills[1].GetAllStrainPeaks()[index];
+            double sliderBonus = 1 + database.preSkills[1].GetAllStrainPeaks()[index] * 0.5;
 
             //if (Previous.Count > 0)
             //{
