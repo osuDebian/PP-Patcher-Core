@@ -89,7 +89,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             }
 
             // Custom multipliers for NoFail and SpunOut.
-            double multiplier = 1.12; // This is being adjusted to keep the final pp value scaled around what it used to be when changing things
+            double multiplier = 1.2; // This is being adjusted to keep the final pp value scaled around what it used to be when changing things
 
             if (mods.Any(m => m is OsuModNoFail))
                 multiplier *= Math.Max(0.90, 1.0 - 0.02 * countMiss);
@@ -128,7 +128,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
 
         private double computeAimValueRelax()
         {
-            double rawAim = Attributes.AimStrainRelax;
+            double rawAim = Attributes.AimStrain;
 
             if (mods.Any(m => m is OsuModTouchDevice))
                 rawAim = Math.Pow(rawAim, 0.8);
@@ -156,7 +156,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             //Console.WriteLine("lengthBonusRate: " + StreamFirst + ", " + JumpRate + ", " + (180 + (180.0) * (JumpRate - 0.3) * (1 / 0.4)));
             //if (JumpRate <= 0.3) StreamNerfRateLength = 0;
             //if (JumpRate >= 0.7) StreamNerfRateLength = 1;
-            double StreamNerfRateLength = Math.Max(1 - StreamFirst * 1.25, 0);
+            double StreamNerfRateLength = Math.Max(1 - StreamFirst * 2, 0);
 
             //Console.WriteLine(Attributes.HitCircleCount + ", "
             //    + totalHits + ", "
@@ -166,8 +166,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty
 
             double lengthBonus = 0.95
                                     + 0.05 * Math.Min(1.0, totalHits / 500) * StreamNerfRateLength
-                                    + 0.2 * Math.Max(Math.Min(1.0, (totalHits - 500) / 500), 0) * StreamNerfRateLength
-                                    + 0.8 * Math.Max(Math.Min(1.0, (totalHits - 1000) / 2000.0), 0) * StreamNerfRateLength;
+                                    + 0.3 * Math.Max(Math.Min(1.0, (totalHits - 500) / 500), 0) * StreamNerfRateLength
+                                    + 0.7 * Math.Max(Math.Min(1.0, (totalHits - 1000) / 2000.0), 0) * StreamNerfRateLength;
                                     ;
             //Console.WriteLine(lengthBonus + ", " + JumpRate);
             //Console.WriteLine(lengthBonus);
@@ -202,10 +202,10 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             // 이지 유저 보완 코드.
             // AR이 낮으면 낮을수록 아주 크게 버프받는다. AR 4까지 보장
             // aimValue *= log(10 + (12 - AR)^(2.5)) / 2
-            // hidden multiplier 1.8
+            // hidden multiplier 1.5
             double lowarBonus = Math.Log10(9
-                + Math.Min(Math.Pow((12 - Attributes.ApproachRate), 2), 64) // 42.22
-                * (mods.Any(h => h is OsuModHidden) ? 1.8 : 1));
+                + Math.Pow(Math.Min((12 - Attributes.ApproachRate), 8), 1.5) * 2 // 42.22
+                * (mods.Any(h => h is OsuModHidden) ? 1.5 : 1));
             //Console.WriteLine(lowarBonus);
             aimValue *= lowarBonus;
 
@@ -387,7 +387,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             double JumpRate = (Attributes.DistanceAverage / Attributes.DistanceTop);
             double StreamThresholdLength = 0.7;
             double StreamFirstLength = Math.Max((StreamThresholdLength - JumpRate), 0);
-            double StreamNerfRateLength = Math.Max(1 - StreamFirstLength * 3, 0.05);
+            double StreamNerfRateLength = Math.Max(1 - StreamFirstLength * 2.5, 0.05);
             //Console.WriteLine(StreamNerfRateLength);
             //Console.WriteLine(Math.Min(1.15, Math.Pow(amountHitObjectsWithAccuracy / 2000.0 * StreamNerfRateLength, 0.3)));
             accuracyValue *= Math.Min(1.15, Math.Pow(amountHitObjectsWithAccuracy / 1000.0 * StreamNerfRateLength, 0.3));
