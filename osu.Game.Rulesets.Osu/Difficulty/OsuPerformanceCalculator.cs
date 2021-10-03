@@ -164,11 +164,8 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             //    + StreamNerfRateLength);
 
 
-            double lengthBonus = 0.95
-                                    + 0.05 * Math.Min(1.0, totalHits / 500) * StreamNerfRateLength
-                                    + 0.3 * Math.Max(Math.Min(1.0, (totalHits - 500) / 500), 0) * StreamNerfRateLength
-                                    + 0.7 * Math.Max(Math.Min(1.0, (totalHits - 1000) / 2000.0), 0) * StreamNerfRateLength;
-                                    ;
+            double lengthBonus = 0.95 + (0.4 * Math.Min(1.0, totalHits / 2000.0) +
+                                 (totalHits > 2000 ? Math.Log10(totalHits / 2000.0) * 0.5 : 0.0)) * StreamNerfRateLength;
             //Console.WriteLine(lengthBonus + ", " + JumpRate);
             //Console.WriteLine(lengthBonus);
             aimValue *= lengthBonus;
